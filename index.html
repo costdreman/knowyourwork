@@ -335,7 +335,7 @@ tr:hover td { background: rgba(255,255,255,0.01); }
 .rpg-layout { display:flex;gap:1rem;align-items:flex-start; }
 .rpg-left { flex:0 0 520px;max-width:520px; }
 .rpg-right { flex:1;min-width:250px; }
-.rpg-dialogue-overlay { position:absolute;bottom:45%;left:6px;right:6px;background:#1a2332;border:4px solid #c8b88a;border-radius:2px;padding:0.75rem;text-align:left;box-shadow:inset 0 0 0 2px #2a3a5c,4px 4px 0 #000;z-index:10;max-height:45%;overflow-y:auto;display:none; }
+.rpg-dialogue-overlay { position:absolute;bottom:45%;left:6px;right:6px;background:#1a2332;border:4px solid #c8b88a;border-radius:2px;padding:0.75rem;padding-top:1.5rem;text-align:left;box-shadow:inset 0 0 0 2px #2a3a5c,4px 4px 0 #000;z-index:10;max-height:45%;overflow-y:auto;display:none; }
 .rpg-desktop-controls { display:flex; }
 .rpg-mobile-controls { display:none !important; }
 @media(max-width:800px){
@@ -3238,7 +3238,7 @@ function isBlocked(x,y){
     return false;
 }
 function rpgMove(dx,dy){
-    if(rpgTalking)return;
+    if(rpgTalking||rpgInteractCooldown)return;
     player.dir=dx===1?0:dx===-1?2:dy===1?1:3;
     var nx=player.x+dx,ny=player.y+dy;
     if(!isBlocked(nx,ny)){player.x=nx;player.y=ny;}
@@ -3265,7 +3265,7 @@ function rpgMove(dx,dy){
     drawRPG();
 }
 function rpgInteract(){
-    if(rpgTalking)return;
+    if(rpgTalking||rpgInteractCooldown)return;
     for(var i=0;i<npcs.length;i++){
         var n=npcs[i];
         if(Math.abs(n.x-player.x)+Math.abs(n.y-player.y)<=2){talkTo(n);return;}
@@ -3373,7 +3373,8 @@ function showDialogue(emoji,name,text,color){
     // Mobile overlay — always update
     var mob=document.getElementById('rpgDialogueMobile');
     mob.classList.add('active');
-    mob.innerHTML='<div style="font-family:\'Press Start 2P\',monospace;font-weight:700;font-size:0.65rem;margin-bottom:0.3rem;color:#e8e0c8;">'+speakerHTML+'</div>'+
+    mob.innerHTML='<div onclick="rpgCloseDialogue()" style="position:absolute;top:4px;right:8px;font-size:1.2rem;cursor:pointer;color:#c8b88a;z-index:20;">✕</div>'+
+        '<div style="font-family:\'Press Start 2P\',monospace;font-weight:700;font-size:0.65rem;margin-bottom:0.3rem;color:#e8e0c8;">'+speakerHTML+'</div>'+
         '<div id="rpgTextMob" style="font-family:\'Press Start 2P\',monospace;font-size:0.6rem;line-height:2;color:#e8e0c8;">'+(text||'')+'</div>'+
         '<div id="rpgChoicesMob" style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.5rem;"></div>';
 }
@@ -3391,7 +3392,9 @@ function updateChoices(html){
     var mob=document.getElementById('rpgChoicesMob');
     if(mob) mob.innerHTML=html;
 }
-function rpgCloseDialogue(){rpgTalking=false;document.getElementById('rpgDialogue').style.display='none';var mob=document.getElementById('rpgDialogueMobile');mob.classList.remove('active','fullscreen');drawRPG();}
+var rpgInteractCooldown=false;
+function rpgCloseDialogue(){rpgTalking=false;rpgInteractCooldown=true;document.getElementById('rpgDialogue').style.display='none';var mob=document.getElementById('rpgDialogueMobile');mob.classList.remove('active','fullscreen');drawRPG();setTimeout(function(){rpgInteractCooldown=false;},500);}
+function rpgInteractCheck(){if(rpgInteractCooldown)return;rpgInteract();}
 function showRPGEnd(){
     stopMusic();
     document.getElementById('gameArea').style.display='none';
@@ -3466,7 +3469,7 @@ document.addEventListener('keydown',function(e){
 });
 var _tsx=0,_tsy=0;
 document.addEventListener('touchstart',function(e){_tsx=e.touches[0].clientX;_tsy=e.touches[0].clientY;});
-document.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-_tsx,dy=e.changedTouches[0].clientY-_tsy;if(Math.abs(dx)<20&&Math.abs(dy)<20){rpgInteract();return;}if(Math.abs(dx)>Math.abs(dy)){dx>0?rpgMove(1,0):rpgMove(-1,0);}else{dy>0?rpgMove(0,1):rpgMove(0,-1);}});
+document.addEventListener('touchend',function(e){if(rpgTalking||rpgInteractCooldown)return;var dx=e.changedTouches[0].clientX-_tsx,dy=e.changedTouches[0].clientY-_tsy;if(Math.abs(dx)<20&&Math.abs(dy)<20){rpgInteractCheck();return;}if(Math.abs(dx)>Math.abs(dy)){dx>0?rpgMove(1,0):rpgMove(-1,0);}else{dy>0?rpgMove(0,1):rpgMove(0,-1);}});
 </script>
 </body>
 </html>
