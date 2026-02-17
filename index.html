@@ -3290,8 +3290,9 @@ function talkTo(npc){
         updateChoices('<button id="rpgNextBtn" onclick="rpgNextLine()" class="rpg-dlg-btn">Συνέχεια →</button>');
         window._npcLines=npc.lines;window._npcLineIdx=0;window._npcRef=npc;
     } else {
-        showDialogue(npc.emoji,npc.name,'(Δεν έχω κάτι άλλο.)',npc.color);
-        updateChoices('<button onclick="rpgCloseDialogue()" class="rpg-dlg-btn">Οκ</button>');
+        // NPC already talked, don't open dialogue
+        rpgTalking=false;
+        return;
     }
 }
 function rpgNextLine(){
