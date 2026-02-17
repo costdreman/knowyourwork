@@ -3062,7 +3062,6 @@ function storyAnswer(ok,step,choiceText){var chat=document.getElementById('story
 function showStoryEnd(){storyFinished=true;var chat=document.getElementById('storyChat');var pct=Math.round((storyScore/storyTotal)*100);var emoji=pct===100?'🏆':pct>=50?'👍':'📚';var msg=pct===100?'Τέλειο! Ξέρεις τα δικαιώματά σου!':pct>=50?'Καλά πας! Συνέχισε να μαθαίνεις.':'Χρειάζεσαι λίγο διάβασμα!';var d=document.createElement('div');d.className='story-score';d.innerHTML='<div style="font-size:3rem;margin-bottom:0.5rem;">'+emoji+'</div><h2>Σκορ Σεναρίου</h2><div class="score-num">'+storyScore+'/'+storyTotal+'</div><div style="color:var(--text-muted);font-size:0.85rem;margin-top:0.25rem;">'+msg+'</div><button class="rc-next" style="margin-top:1.5rem;max-width:300px;" onclick="backToStories()">Δες κι άλλα σενάρια</button>';chat.appendChild(d);}
 function backToStories(){document.getElementById('storyList').style.display='flex';document.getElementById('storyActive').style.display='none';}
 
--e 
 // ========== OFFICE QUEST RPG ==========
 var T=20,COLS=24,ROWS=24,rpgXP=0,rpgLvl=0,rpgFacts=[],rpgTalking=false;
 var player={x:12,y:18,dir:0};
