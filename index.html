@@ -1095,7 +1095,8 @@ function showPage(id) {
         storyFinished = false;
         backToStories();
     }
-    
+    // Reset blog to list view when navigating to blog
+    if (id === 'blog') { closeBlogPost(); }
     // Reset calculator results AND inputs when navigating away from calculators
     if (id !== 'calculators') {
         document.querySelectorAll('.calc-result').forEach(function(r) { r.classList.remove('show'); r.innerHTML = ''; });
