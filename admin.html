@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>KYW Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0D1B2A;
+            --bg-card: #111F30;
+            --bg-card-hover: #162638;
+            --bg-input: #131E2D;
+            --border: #1E3044;
+            --border-light: #2A4058;
+            --text: #E2E8F0;
+            --text-muted: #7A8FA0;
+            --text-dim: #4A6070;
+            --accent: #00B4D8;
+            --accent-hover: #48CAE4;
+            --accent-glow: rgba(0, 180, 216, 0.12);
+            --cyan: #48CAE4;
+            --spark: #FF7F45;
+            --green: #34D399;
+            --green-bg: rgba(52, 211, 153, 0.08);
+            --red: #F87171;
+            --red-bg: rgba(248, 113, 113, 0.08);
+            --orange: #FF6B35;
+            --orange-bg: rgba(255, 107, 53, 0.08);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-lg: 20px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ===== TOPBAR ===== */
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+        }
+        .topbar-brand .k { color: #fff; font-weight: 400; }
+        .topbar-brand .y { color: #fff; font-weight: 700; }
+        .topbar-brand .w { color: var(--cyan); font-weight: 700; }
+        .topbar-badge {
+            background: var(--spark);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 100px;
+            letter-spacing: 0.04em;
+        }
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .topbar-link {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .topbar-link:hover { color: var(--cyan); }
+
+        /* ===== TABS ===== */
+        .tab-bar {
+            display: flex;
+            gap: 0.25rem;
+            padding: 1rem 1.5rem 0;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .tab-btn {
+            padding: 0.65rem 1.5rem;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid transparent;
+            border-bottom: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'DM Sans';
+        }
+        .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+        .tab-btn.active {
+            background: var(--bg-card);
+            border-color: var(--border);
+            color: var(--cyan);
+        }
+
+        /* ===== MAIN ===== */
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+        }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-header h3 { font-size: 0.95rem; font-weight: 600; }
+        .card-body { padding: 1.5rem; }
+
+        /* ===== FORM ===== */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-row.full { grid-template-columns: 1fr; }
+        .form-row.three { grid-template-columns: 1fr 1fr 100px; }
+        .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.7rem 0.9rem;
+            font-size: 0.9rem;
+            color: var(--text);
+            font-family: 'DM Sans';
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--accent);
+        }
+        .form-group select {
+            cursor: pointer;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238888A0' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            padding-right: 2rem;
+        }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-hint { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.15rem; }
+
+        /* ===== WYSIWYG TOOLBAR ===== */
+        .editor-wrap {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        .editor-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.15rem;
+            padding: 0.4rem 0.5rem;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+        .editor-toolbar button {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            border-radius: 4px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: 'DM Sans';
+            transition: all 0.15s;
+        }
+        .editor-toolbar button:hover { background: var(--bg-card); color: var(--text); border-color: var(--border); }
+        .editor-toolbar button.active { background: var(--accent-glow); color: var(--cyan); border-color: rgba(0,180,216,0.3); }
+        .editor-toolbar .sep {
+            width: 1px;
+            background: var(--border);
+            margin: 0 0.25rem;
+            align-self: stretch;
+        }
+        .editor-toolbar select {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 4px;
+            padding: 0.25rem 0.4rem;
+            font-size: 0.75rem;
+            font-family: 'DM Sans';
+            cursor: pointer;
+            outline: none;
+        }
+        .editor-content {
+            min-height: 350px;
+            padding: 1rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            outline: none;
+            background: var(--bg-input);
+        }
+        .editor-content h2 { color: var(--text); font-size: 1.3rem; margin: 1.5rem 0 0.5rem; }
+        .editor-content h3 { color: var(--text); font-size: 1.1rem; margin: 1rem 0 0.4rem; }
+        .editor-content p { margin-bottom: 0.75rem; }
+        .editor-content a { color: var(--cyan); }
+        .editor-content:empty::before {
+            content: attr(data-placeholder);
+            color: var(--text-dim);
+        }
+
+        /* Source code view */
+        .source-view {
+            display: none;
+            min-height: 350px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            background: var(--bg-input);
+            color: var(--green);
+            border: none;
+            outline: none;
+            resize: vertical;
+            width: 100%;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 0.65rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'DM Sans';
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--text-muted); color: var(--text); }
+        .btn-danger { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+        .btn-danger:hover { background: rgba(248,113,113,0.15); }
+        .btn-sm { font-size: 0.78rem; padding: 0.4rem 0.9rem; }
+        .btn-group { display: flex; gap: 0.75rem; margin-top: 1rem; }
+
+        /* ===== TABLE LIST ===== */
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+        .item-row:hover { background: rgba(255,255,255,0.015); }
+        .item-row:last-child { border-bottom: none; }
+        .item-info { flex: 1; min-width: 0; }
+        .item-title { font-size: 0.88rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-meta { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.15rem; }
+        .item-actions { display: flex; gap: 0.35rem; flex-shrink: 0; }
+        .item-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.15s;
+        }
+        .item-btn:hover { border-color: var(--cyan); color: var(--cyan); background: var(--accent-glow); }
+        .item-btn.del:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+
+        /* ===== TAG BADGES ===== */
+        .tag-badge {
+            display: inline-block;
+            padding: 0.12rem 0.5rem;
+            border-radius: 100px;
+            font-size: 0.68rem;
+            font-weight: 500;
+            background: var(--accent-glow);
+            color: var(--cyan);
+            margin-left: 0.5rem;
+        }
+
+        /* ===== STATUS ===== */
+        .status-msg {
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            display: none;
+        }
+        .status-msg.success { display: block; background: var(--green-bg); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+        .status-msg.error { display: block; background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+
+        /* ===== IMAGE UPLOAD ===== */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .upload-area:hover { border-color: var(--accent); background: rgba(0,180,216,0.03); }
+        .upload-area.has-file { border-color: var(--green); border-style: solid; }
+        .upload-preview {
+            max-height: 120px;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== Q&A SPECIFIC ===== */
+        .keyword-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            padding: 0.5rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            min-height: 42px;
+            cursor: text;
+        }
+        .keyword-tags:focus-within { border-color: var(--accent); }
+        .keyword-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.55rem;
+            background: var(--accent-glow);
+            color: var(--cyan);
+            border-radius: 100px;
+            font-size: 0.78rem;
+        }
+        .keyword-tag .remove {
+            cursor: pointer;
+            font-size: 0.9rem;
+            line-height: 1;
+            opacity: 0.6;
+            transition: opacity 0.15s;
+        }
+        .keyword-tag .remove:hover { opacity: 1; }
+        .keyword-input {
+            border: none;
+            background: none;
+            color: var(--text);
+            font-family: 'DM Sans';
+            font-size: 0.85rem;
+            outline: none;
+            flex: 1;
+            min-width: 80px;
+            padding: 0.2rem;
+        }
+
+        /* ===== SEO PREVIEW ===== */
+        .seo-preview {
+            background: #fff;
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            margin-top: 0.75rem;
+        }
+        .seo-preview-title {
+            color: #1a0dab;
+            font-size: 1.1rem;
+            font-weight: 400;
+            line-height: 1.3;
+            margin-bottom: 0.2rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .seo-preview-url {
+            color: #006621;
+            font-size: 0.82rem;
+            margin-bottom: 0.25rem;
+        }
+        .seo-preview-desc {
+            color: #545454;
+            font-size: 0.82rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .form-row, .form-row.three { grid-template-columns: 1fr; }
+            .tab-bar { overflow-x: auto; flex-wrap: nowrap; }
+            .tab-btn { white-space: nowrap; font-size: 0.8rem; padding: 0.55rem 1rem; }
+            .card-body { padding: 1rem; }
+            .editor-content { min-height: 250px; }
+        }
+
+        /* ===== TOGGLE ===== */
+        .toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .toggle {
+            width: 40px; height: 22px;
+            background: var(--border);
+            border-radius: 100px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .toggle.on { background: var(--accent); }
+        .toggle::after {
+            content: '';
+            width: 16px; height: 16px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px; left: 3px;
+            transition: transform 0.2s;
+        }
+        .toggle.on::after { transform: translateX(18px); }
+        .toggle-label { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Loading */
+        .spinner {
+            display: inline-block;
+            width: 16px; height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--cyan);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 0.4rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<!-- ===== TOPBAR ===== -->
+<div class="topbar">
+    <div class="topbar-brand">
+        <span><span class="k">Know</span><span class="y">Your</span><span class="w">Work</span></span>
+        <span class="topbar-badge">ADMIN</span>
+    </div>
+    <div class="topbar-actions">
+        <a href="/" class="topbar-link">← Πίσω στο site</a>
+    </div>
+</div>
+
+<!-- ===== TABS ===== -->
+<div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('blog')">📝 Blog Editor</button>
+    <button class="tab-btn" onclick="switchTab('qa')">💬 Q&A Editor</button>
+    <button class="tab-btn" onclick="switchTab('list')">📚 Όλα τα Άρθρα</button>
+    <button class="tab-btn" onclick="switchTab('qalist')">📋 Όλα τα Q&A</button>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+    <!-- ==================== BLOG EDITOR ==================== -->
+    <div class="tab-panel active" id="panel-blog">
+        <div class="card">
+            <div class="card-header">
+                <h3 id="blogFormTitle">✏️ Νέο Άρθρο</h3>
+                <button class="btn btn-secondary btn-sm" onclick="resetBlogForm()">🔄 Καθαρισμός</button>
+            </div>
+            <div class="card-body">
+                <input type="hidden" id="blogEditId" value="">
+
+                <!-- Title & Tag -->
+                <div class="form-row three">
+                    <div class="form-group">
+                        <label>Τίτλος</label>
+                        <input type="text" id="blogTitle" placeholder="π.χ. Ετήσια Άδεια 2026" oninput="updateSeoPreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Κατηγορία (tag)</label>
+                        <select id="blogTag">
+                            <option value="Άδειες">📅 Άδειες</option>
+                            <option value="Μισθός">💶 Μισθός</option>
+                            <option value="Απόλυση">⚖️ Απόλυση</option>
+                            <option value="Ωράριο">⏰ Ωράριο</option>
+                            <option value="Δώρα">🎄 Δώρα</option>
+                            <option value="Εργασία">👷 Εργασία</option>
+                            <option value="Μητρότητα">🤰 Μητρότητα</option>
+                            <option value="Πατρότητα">👨‍👧 Πατρότητα</option>
+                            <option value="Νέοι">🎓 Νέοι</option>
+                            <option value="Γενικά">📄 Γενικά</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Emoji</label>
+                        <input type="text" id="blogEmoji" value="📄" style="text-align:center;font-size:1.2rem;">
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Περίληψη</label>
+                        <input type="text" id="blogSummary" placeholder="1-2 προτάσεις..." oninput="updateSeoPreview()">
+                    </div>
+                </div>
+
+                <!-- Image -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Εικόνα Άρθρου</label>
+                        <div class="upload-area" id="blogUploadArea" onclick="document.getElementById('blogImage').click()">
+                            <input type="file" id="blogImage" accept="image/*" style="display:none;" onchange="previewImage(this,'blogUploadArea')">
+                            <div id="blogImageText">📷 Σύρε ή κλίκαρε για εικόνα</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Θέση Εικόνας</label>
+                        <select id="blogImagePos">
+                            <option value="top">Πάνω μέρος</option>
+                            <option value="20%">Λίγο πιο κάτω</option>
+                            <option value="center" selected>Κέντρο</option>
+                            <option value="70%">Λίγο πιο κάτω</option>
+                            <option value="bottom">Κάτω μέρος</option>
+                        </select>
+                        <div class="toggle-wrap" style="margin-top:0.75rem;">
+                            <div class="toggle on" id="blogPublished" onclick="this.classList.toggle('on')"></div>
+                            <span class="toggle-label">Δημοσιευμένο</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WYSIWYG Editor -->
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Περιεχόμενο</label>
+                        <div class="editor-wrap">
+                            <div class="editor-toolbar" id="blogToolbar">
+                                <select onchange="execFormat('formatBlock',this.value);this.value='';">
+                                    <option value="">Μορφή...</option>
+                                    <option value="h2">H2 — Section</option>
+                                    <option value="h3">H3 — Subsection</option>
+                                    <option value="p">Παράγραφος</option>
+                                </select>
+                                <div class="sep"></div>
+                                <button onclick="execCmd('bold')" title="Bold"><b>B</b></button>
+                                <button onclick="execCmd('italic')" title="Italic"><i>I</i></button>
+                                <button onclick="execCmd('underline')" title="Underline"><u>U</u></button>
+                                <div class="sep"></div>
+                                <button onclick="execCmd('insertUnorderedList')" title="Bullet list">•</button>
+                                <button onclick="execCmd('insertOrderedList')" title="Numbered list">1.</button>
+                                <div class="sep"></div>
+                                <button onclick="insertLink()" title="Link">🔗</button>
+                                <button onclick="insertCalcLink()" title="Link σε Calculator">🧮</button>
+                                <button onclick="insertBlogLink()" title="Link σε Blog Post">📎</button>
+                                <div class="sep"></div>
+                                <button onclick="insertEmoji()" title="Emoji">😀</button>
+                                <button onclick="toggleSource('blog')" title="HTML Source" id="blogSourceBtn">{ }</button>
+                            </div>
+                            <div class="editor-content" id="blogEditor" contenteditable="true" data-placeholder="Γράψε το άρθρο εδώ..."></div>
+                            <textarea class="source-view" id="blogSource"></textarea>
+                        </div>
+                        <div class="form-hint">💡 Blog style: Bold μόνο σε headings, ΟΧΙ σε νούμερα στο body text</div>
+                    </div>
+                </div>
+
+                <!-- SEO Fields -->
+                <div class="card" style="margin-top:1rem;background:var(--bg);">
+                    <div class="card-header">
+                        <h3>🔍 SEO</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Slug (URL)</label>
+                                <input type="text" id="blogSlug" placeholder="auto-generated" oninput="updateSeoPreview()">
+                                <div class="form-hint">Αφήστε κενό για auto-generate από τον τίτλο</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Meta Title</label>
+                                <input type="text" id="blogMetaTitle" placeholder="Αφήστε κενό = τίτλος άρθρου" oninput="updateSeoPreview()">
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group">
+                                <label>Meta Description</label>
+                                <input type="text" id="blogMetaDesc" placeholder="Αφήστε κενό = περίληψη" oninput="updateSeoPreview()" maxlength="160">
+                                <div class="form-hint"><span id="metaDescCount">0</span>/160 χαρακτήρες</div>
+                            </div>
+                        </div>
+                        <!-- Google Preview -->
+                        <div class="seo-preview">
+                            <div class="seo-preview-title" id="seoPreviewTitle">Τίτλος Άρθρου — KnowYourWork</div>
+                            <div class="seo-preview-url" id="seoPreviewUrl">knowyourwork.gr/blog/slug-arthrou</div>
+                            <div class="seo-preview-desc" id="seoPreviewDesc">Περιγραφή του άρθρου εδώ...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="blogSaveBtn" onclick="saveBlogPost()">💾 Δημοσίευση</button>
+                    <button class="btn btn-secondary" onclick="resetBlogForm()">Ακύρωση</button>
+                </div>
+                <div class="status-msg" id="blogStatus"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== Q&A EDITOR ==================== -->
+    <div class="tab-panel" id="panel-qa">
+        <div class="card">
+            <div class="card-header">
+                <h3 id="qaFormTitle">💬 Νέο Q&A Entry</h3>
+                <button class="btn btn-secondary btn-sm" onclick="resetQaForm()">🔄 Καθαρισμός</button>
+            </div>
+            <div class="card-body">
+                <input type="hidden" id="qaEditId" value="">
+
+                <!-- Question & Category -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ερώτηση</label>
+                        <input type="text" id="qaQuestion" placeholder="π.χ. Πόσες μέρες άδεια δικαιούμαι;">
+                    </div>
+                    <div class="form-group">
+                        <label>Κατηγορία</label>
+                        <select id="qaCategory">
+                            <option value="leave">📅 leave (Άδειες)</option>
+                            <option value="salary">💶 salary (Μισθός)</option>
+                            <option value="schedule">⏰ schedule (Ωράριο)</option>
+                            <option value="bonus">🎄 bonus (Δώρα)</option>
+                            <option value="employment">👷 employment (Εργασία)</option>
+                            <option value="general">📄 general (Γενικά)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Keywords -->
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Keywords (πάτα Enter για κάθε keyword)</label>
+                        <div class="keyword-tags" id="qaKeywords" onclick="this.querySelector('input').focus()">
+                            <input type="text" class="keyword-input" id="qaKeywordInput" placeholder="Γράψε keyword + Enter..." onkeydown="handleKeyword(event)">
+                        </div>
+                        <div class="form-hint">Βάλε ΟΛΕΣ τις πιθανές λέξεις (με & χωρίς τόνους, greeklish)</div>
+                    </div>
+                </div>
+
+                <!-- Sort Order -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Sort Order</label>
+                        <input type="number" id="qaSortOrder" placeholder="π.χ. 25" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <div class="toggle-wrap" style="margin-top:0.5rem;">
+                            <div class="toggle on" id="qaActive" onclick="this.classList.toggle('on')"></div>
+                            <span class="toggle-label">Ενεργό</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Answer WYSIWYG -->
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Απάντηση</label>
+                        <div class="editor-wrap">
+                            <div class="editor-toolbar" id="qaToolbar">
+                                <button onclick="execCmd('bold','qa')" title="Bold"><b>B</b></button>
+                                <button onclick="execCmd('italic','qa')" title="Italic"><i>I</i></button>
+                                <div class="sep"></div>
+                                <button onclick="insertBr('qa')" title="Line break (br)">↵</button>
+                                <button onclick="insertEmoji('qa')" title="Emoji">😀</button>
+                                <div class="sep"></div>
+                                <button onclick="insertQaBlogLink()" title="👉 Blog link">👉📝</button>
+                                <button onclick="insertQaCalcLink()" title="👉 Calc link">👉🧮</button>
+                                <div class="sep"></div>
+                                <button onclick="toggleSource('qa')" title="HTML Source" id="qaSourceBtn">{ }</button>
+                            </div>
+                            <div class="editor-content" id="qaEditor" contenteditable="true" data-placeholder="Γράψε την απάντηση... Χρησιμοποίησε bold σε keywords & νούμερα, emojis, τέλειωσε με 👉 link" style="min-height:200px;"></div>
+                            <textarea class="source-view" id="qaSource" style="min-height:200px;"></textarea>
+                        </div>
+                        <div class="form-hint">💡 Q&A style: Bold σε keywords & νούμερα, emojis, τελειώνει ΠΑΝΤΑ με 👉 link</div>
+                    </div>
+                </div>
+
+                <!-- SQL Preview -->
+                <div class="card" style="margin-top:1rem;background:var(--bg);">
+                    <div class="card-header">
+                        <h3>🗃️ SQL Preview</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="copySql()">📋 Copy SQL</button>
+                    </div>
+                    <div class="card-body">
+                        <pre id="qaSqlPreview" style="font-family:'Courier New',monospace;font-size:0.78rem;color:var(--green);line-height:1.6;white-space:pre-wrap;word-break:break-all;">-- Συμπλήρωσε τα πεδία παραπάνω...</pre>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="qaSaveBtn" onclick="saveQaEntry()">💾 Αποθήκευση</button>
+                    <button class="btn btn-secondary" onclick="generateSql()">📄 Δες SQL</button>
+                    <button class="btn btn-secondary" onclick="resetQaForm()">Ακύρωση</button>
+                </div>
+                <div class="status-msg" id="qaStatus"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BLOG LIST ==================== -->
+    <div class="tab-panel" id="panel-list">
+        <div class="card">
+            <div class="card-header">
+                <h3>📚 Όλα τα Άρθρα</h3>
+                <button class="btn btn-secondary btn-sm" onclick="loadBlogList()">🔄 Ανανέωση</button>
+            </div>
+            <div id="blogListItems" style="min-height:100px;">
+                <div style="padding:2rem;text-align:center;color:var(--text-dim);">Φόρτωση...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== Q&A LIST ==================== -->
+    <div class="tab-panel" id="panel-qalist">
+        <div class="card">
+            <div class="card-header">
+                <h3>📋 Όλα τα Q&A</h3>
+                <button class="btn btn-secondary btn-sm" onclick="loadQaList()">🔄 Ανανέωση</button>
+            </div>
+            <div id="qaListItems" style="min-height:100px;">
+                <div style="padding:2rem;text-align:center;color:var(--text-dim);">Φόρτωση...</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ========== SUPABASE CONFIG ==========
+var SB_URL = 'https://polsaocrvbtsyadgbmid.supabase.co';
+var SB_KEY = 'sb_publishable_S_Hx1AjmIxIOHKdYydvvKA_tthrpq6_';
+
+// ========== SUPABASE HELPERS ==========
+async function sbGet(table, query) {
+    try {
+        var res = await fetch(SB_URL + '/rest/v1/' + table + '?' + (query || ''), {
+            headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+        });
+        if (!res.ok) throw new Error(res.status);
+        return await res.json();
+    } catch(e) { console.error('GET error:', e); return null; }
+}
+
+async function sbInsert(table, data) {
+    var res = await fetch(SB_URL + '/rest/v1/' + table, {
+        method: 'POST',
+        headers: {
+            'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
+            'Content-Type': 'application/json', 'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Insert failed: ' + res.status);
+    return await res.json();
+}
+
+async function sbUpdate(table, id, data) {
+    var res = await fetch(SB_URL + '/rest/v1/' + table + '?id=eq.' + id, {
+        method: 'PATCH',
+        headers: {
+            'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
+            'Content-Type': 'application/json', 'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Update failed: ' + res.status);
+}
+
+async function sbDelete(table, id) {
+    var res = await fetch(SB_URL + '/rest/v1/' + table + '?id=eq.' + id, {
+        method: 'DELETE',
+        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if (!res.ok) throw new Error('Delete failed: ' + res.status);
+}
+
+async function sbUploadImage(file) {
+    var ext = file.name.split('.').pop();
+    var fileName = Date.now() + '-' + Math.random().toString(36).substr(2,6) + '.' + ext;
+    var res = await fetch(SB_URL + '/storage/v1/object/blog-images/' + fileName, {
+        method: 'POST',
+        headers: {
+            'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
+            'Content-Type': file.type
+        },
+        body: file
+    });
+    if (!res.ok) throw new Error('Upload failed: ' + res.status);
+    return SB_URL + '/storage/v1/object/public/blog-images/' + fileName;
+}
+
+// ========== TAB SWITCHING ==========
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(function(b,i) {
+        b.classList.toggle('active', b.textContent.includes(
+            tab === 'blog' ? 'Blog' : tab === 'qa' ? 'Q&A E' : tab === 'list' ? 'Άρθρα' : 'Q&A'
+        ) && (tab !== 'qa' || !b.textContent.includes('Όλα')) && (tab !== 'qalist' || b.textContent.includes('Όλα τα Q')));
+    });
+    // Simpler approach
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    var tabs = ['blog','qa','list','qalist'];
+    var btns = document.querySelectorAll('.tab-btn');
+    tabs.forEach(function(t,i) { if (t === tab) btns[i].classList.add('active'); });
+
+    document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    document.getElementById('panel-' + tab).classList.add('active');
+
+    if (tab === 'list') loadBlogList();
+    if (tab === 'qalist') loadQaList();
+}
+
+// ========== WYSIWYG COMMANDS ==========
+function getEditor(target) {
+    return target === 'qa' ? document.getElementById('qaEditor') : document.getElementById('blogEditor');
+}
+
+function execCmd(cmd, target) {
+    getEditor(target).focus();
+    document.execCommand(cmd, false, null);
+}
+
+function execFormat(cmd, value) {
+    document.getElementById('blogEditor').focus();
+    if (value) document.execCommand(cmd, false, value);
+}
+
+function insertLink() {
+    var url = prompt('URL:');
+    if (url) {
+        var text = prompt('Κείμενο link:', '');
+        if (text) {
+            document.execCommand('insertHTML', false, '<a href="' + url + '">' + text + '</a>');
+        } else {
+            document.execCommand('createLink', false, url);
+        }
+    }
+}
+
+function insertCalcLink() {
+    var calcs = {leave:'Άδεια', netsalary:'Μικτά→Καθαρά', severance:'Αποζημίωση', overtime:'Υπερωρίες', bonus:'Δώρο Χριστ.', easter:'Δώρο Πάσχα'};
+    var choice = prompt('Calculator: ' + Object.keys(calcs).join(', '));
+    if (choice && calcs[choice]) {
+        var text = prompt('Κείμενο:', 'Υπολόγισέ το');
+        var html = '<a href="#" onclick="showPage(\'calculators\');setTimeout(function(){showCalc(\'' + choice + '\')},100)">' + text + '</a>';
+        document.getElementById('blogEditor').focus();
+        document.execCommand('insertHTML', false, html);
+    }
+}
+
+function insertBlogLink() {
+    var slug = prompt('Blog slug (π.χ. goniki-adeia):');
+    if (slug) {
+        var text = prompt('Κείμενο:', 'Διάβασε τον πλήρη οδηγό');
+        var html = '<a href="#" onclick="showPage(\'blog\');setTimeout(function(){showBlogPost(\'' + slug + '\')},200)">' + text + '</a>';
+        document.getElementById('blogEditor').focus();
+        document.execCommand('insertHTML', false, html);
+    }
+}
+
+function insertBr(target) {
+    getEditor(target).focus();
+    document.execCommand('insertHTML', false, '<br><br>');
+}
+
+function insertEmoji(target) {
+    var emojis = '🆕 🛡️ 👨‍👩‍👧 ⚠️ 💡 ✅ ❌ 📌 🔑 💰 📅 ⏰ 🎯 👉 📄 🏢 📋 🤰 👶';
+    var e = prompt('Emoji: (ή αντέγραψε)\n' + emojis);
+    if (e) {
+        getEditor(target).focus();
+        document.execCommand('insertText', false, e);
+    }
+}
+
+function insertQaBlogLink() {
+    var slug = prompt('Blog slug (π.χ. goniki-adeia):');
+    if (slug) {
+        var text = prompt('Κείμενο:', 'Διάβασε τον πλήρη οδηγό');
+        var html = '👉 <a href="#" onclick="showPage(\'blog\');setTimeout(function(){showBlogPost(\'' + slug + '\')},200)">' + text + '</a>';
+        document.getElementById('qaEditor').focus();
+        document.execCommand('insertHTML', false, html);
+    }
+}
+
+function insertQaCalcLink() {
+    var choice = prompt('Calculator: leave, netsalary, severance, overtime, bonus, easter');
+    if (choice) {
+        var text = prompt('Κείμενο:', 'Υπολόγισέ το εδώ');
+        var html = '👉 <a href="#" onclick="showPage(\'calculators\');setTimeout(function(){showCalc(\'' + choice + '\')},100)">' + text + '</a>';
+        document.getElementById('qaEditor').focus();
+        document.execCommand('insertHTML', false, html);
+    }
+}
+
+// ========== SOURCE VIEW TOGGLE ==========
+function toggleSource(type) {
+    var editor = document.getElementById(type + 'Editor');
+    var source = document.getElementById(type + 'Source');
+    var btn = document.getElementById(type + 'SourceBtn');
+
+    if (source.style.display === 'none' || source.style.display === '') {
+        // Switch to source
+        source.value = editor.innerHTML;
+        editor.style.display = 'none';
+        source.style.display = 'block';
+        btn.classList.add('active');
+    } else {
+        // Switch to WYSIWYG
+        editor.innerHTML = source.value;
+        source.style.display = 'none';
+        editor.style.display = 'block';
+        btn.classList.remove('active');
+    }
+}
+
+// ========== IMAGE PREVIEW ==========
+function previewImage(input, areaId) {
+    var area = document.getElementById(areaId);
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            area.classList.add('has-file');
+            area.innerHTML = '<img src="' + e.target.result + '" class="upload-preview"><div style="font-size:0.78rem;color:var(--green);margin-top:0.35rem;">✅ ' + input.files[0].name + '</div>';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// ========== SEO PREVIEW ==========
+function updateSeoPreview() {
+    var title = document.getElementById('blogMetaTitle').value || document.getElementById('blogTitle').value || 'Τίτλος Άρθρου';
+    var desc = document.getElementById('blogMetaDesc').value || document.getElementById('blogSummary').value || 'Περιγραφή...';
+    var slug = document.getElementById('blogSlug').value || generateSlug(document.getElementById('blogTitle').value || 'slug');
+
+    document.getElementById('seoPreviewTitle').textContent = title + ' — KnowYourWork';
+    document.getElementById('seoPreviewUrl').textContent = 'knowyourwork.gr/blog/' + slug;
+    document.getElementById('seoPreviewDesc').textContent = desc;
+    document.getElementById('metaDescCount').textContent = document.getElementById('blogMetaDesc').value.length;
+}
+
+// ========== SLUG GENERATOR ==========
+function generateSlug(text) {
+    return text.toLowerCase()
+        .replace(/[αά]/g,'a').replace(/[εέ]/g,'e').replace(/[ηή]/g,'i').replace(/[ιί]/g,'i')
+        .replace(/[οό]/g,'o').replace(/[υύ]/g,'y').replace(/[ωώ]/g,'o')
+        .replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+}
+
+// ========== KEYWORDS MANAGEMENT ==========
+var qaKeywordList = [];
+
+function handleKeyword(e) {
+    if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        var val = e.target.value.trim();
+        if (val && !qaKeywordList.includes(val)) {
+            qaKeywordList.push(val);
+            renderKeywords();
+        }
+        e.target.value = '';
+    }
+}
+
+function removeKeyword(idx) {
+    qaKeywordList.splice(idx, 1);
+    renderKeywords();
+}
+
+function renderKeywords() {
+    var container = document.getElementById('qaKeywords');
+    var input = document.getElementById('qaKeywordInput');
+    container.innerHTML = '';
+    qaKeywordList.forEach(function(kw, i) {
+        var tag = document.createElement('span');
+        tag.className = 'keyword-tag';
+        tag.innerHTML = kw + ' <span class="remove" onclick="removeKeyword(' + i + ')">×</span>';
+        container.appendChild(tag);
+    });
+    container.appendChild(input);
+    updateSqlPreview();
+}
+
+// ========== SQL PREVIEW ==========
+function updateSqlPreview() {
+    var q = document.getElementById('qaQuestion').value.trim();
+    var answer = document.getElementById('qaSource').style.display === 'block'
+        ? document.getElementById('qaSource').value
+        : document.getElementById('qaEditor').innerHTML;
+    var cat = document.getElementById('qaCategory').value;
+    var sort = document.getElementById('qaSortOrder').value || '?';
+    var kw = qaKeywordList.map(function(k) { return "'" + k.replace(/'/g,"''") + "'"; }).join(',');
+
+    var sql = "INSERT INTO chat_qa (keywords, question, answer, category, sort_order, is_active)\nVALUES\n" +
+        "(ARRAY[" + kw + "],\n" +
+        "'" + q.replace(/'/g,"''") + "',\n" +
+        "'" + answer.replace(/'/g,"''") + "',\n" +
+        "'" + cat + "', " + sort + ", true);";
+
+    document.getElementById('qaSqlPreview').textContent = sql;
+}
+
+function generateSql() { updateSqlPreview(); }
+
+function copySql() {
+    updateSqlPreview();
+    var text = document.getElementById('qaSqlPreview').textContent;
+    navigator.clipboard.writeText(text).then(function() {
+        alert('SQL copied!');
+    });
+}
+
+// ========== SAVE BLOG POST ==========
+async function saveBlogPost() {
+    var btn = document.getElementById('blogSaveBtn');
+    var status = document.getElementById('blogStatus');
+    var editId = document.getElementById('blogEditId').value;
+
+    var title = document.getElementById('blogTitle').value.trim();
+    var content = document.getElementById('blogSource').style.display === 'block'
+        ? document.getElementById('blogSource').value
+        : document.getElementById('blogEditor').innerHTML;
+
+    if (!title || !content) {
+        showStatus(status, 'error', '❌ Συμπλήρωσε τίτλο και περιεχόμενο');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Αποθήκευση...';
+
+    try {
+        // Upload image if selected
+        var imageUrl = null;
+        var fileInput = document.getElementById('blogImage');
+        if (fileInput.files && fileInput.files[0]) {
+            imageUrl = await sbUploadImage(fileInput.files[0]);
+        }
+
+        var slug = document.getElementById('blogSlug').value.trim() || generateSlug(title);
+
+        var postData = {
+            title: title,
+            slug: slug,
+            summary: document.getElementById('blogSummary').value.trim(),
+            content: content,
+            tag: document.getElementById('blogTag').value,
+            emoji: document.getElementById('blogEmoji').value.trim() || '📄',
+            published: document.getElementById('blogPublished').classList.contains('on'),
+            image_position: document.getElementById('blogImagePos').value,
+            meta_title: document.getElementById('blogMetaTitle').value.trim() || null,
+            meta_description: document.getElementById('blogMetaDesc').value.trim() || null
+        };
+        if (imageUrl) postData.image_url = imageUrl;
+
+        if (editId) {
+            await sbUpdate('blog_posts', editId, postData);
+            showStatus(status, 'success', '✅ Το άρθρο ενημερώθηκε!');
+        } else {
+            await sbInsert('blog_posts', postData);
+            showStatus(status, 'success', '✅ Το άρθρο δημοσιεύτηκε!');
+        }
+
+        setTimeout(function() { resetBlogForm(); }, 2000);
+
+    } catch(e) {
+        showStatus(status, 'error', '❌ Σφάλμα: ' + e.message);
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = editId ? '💾 Ενημέρωση' : '💾 Δημοσίευση';
+}
+
+// ========== SAVE Q&A ==========
+async function saveQaEntry() {
+    var btn = document.getElementById('qaSaveBtn');
+    var status = document.getElementById('qaStatus');
+    var editId = document.getElementById('qaEditId').value;
+
+    var question = document.getElementById('qaQuestion').value.trim();
+    var answer = document.getElementById('qaSource').style.display === 'block'
+        ? document.getElementById('qaSource').value
+        : document.getElementById('qaEditor').innerHTML;
+    var category = document.getElementById('qaCategory').value;
+    var sortOrder = parseInt(document.getElementById('qaSortOrder').value) || 0;
+
+    if (!question || !answer) {
+        showStatus(status, 'error', '❌ Συμπλήρωσε ερώτηση και απάντηση');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Αποθήκευση...';
+
+    try {
+        var data = {
+            keywords: qaKeywordList,
+            question: question,
+            answer: answer,
+            category: category,
+            sort_order: sortOrder,
+            is_active: document.getElementById('qaActive').classList.contains('on')
+        };
+
+        if (editId) {
+            await sbUpdate('chat_qa', editId, data);
+            showStatus(status, 'success', '✅ Το Q&A ενημερώθηκε!');
+        } else {
+            await sbInsert('chat_qa', data);
+            showStatus(status, 'success', '✅ Το Q&A αποθηκεύτηκε!');
+        }
+
+        setTimeout(function() { resetQaForm(); }, 2000);
+
+    } catch(e) {
+        showStatus(status, 'error', '❌ Σφάλμα: ' + e.message);
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = editId ? '💾 Ενημέρωση' : '💾 Αποθήκευση';
+}
+
+// ========== LOAD LISTS ==========
+async function loadBlogList() {
+    var container = document.getElementById('blogListItems');
+    container.innerHTML = '<div style="padding:2rem;text-align:center;"><span class="spinner"></span> Φόρτωση...</div>';
+
+    var data = await sbGet('blog_posts', 'order=created_at.desc');
+    if (!data || data.length === 0) {
+        container.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-dim);">Δεν υπάρχουν άρθρα.</div>';
+        return;
+    }
+
+    container.innerHTML = data.map(function(p) {
+        var date = new Date(p.created_at).toLocaleDateString('el-GR');
+        var pub = p.published ? '<span style="color:var(--green);">●</span>' : '<span style="color:var(--red);">○</span>';
+        return '<div class="item-row">' +
+            '<div class="item-info">' +
+                '<div class="item-title">' + pub + ' ' + (p.emoji || '📄') + ' ' + p.title + '<span class="tag-badge">' + (p.tag || '') + '</span></div>' +
+                '<div class="item-meta">' + date + ' · slug: ' + (p.slug || '—') + (p.image_url ? ' · 🖼️' : '') + '</div>' +
+            '</div>' +
+            '<div class="item-actions">' +
+                '<button class="item-btn" onclick="editBlogPost(' + p.id + ')" title="Επεξεργασία">✏️</button>' +
+                '<button class="item-btn del" onclick="deleteBlogPost(' + p.id + ')" title="Διαγραφή">✕</button>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+}
+
+async function loadQaList() {
+    var container = document.getElementById('qaListItems');
+    container.innerHTML = '<div style="padding:2rem;text-align:center;"><span class="spinner"></span> Φόρτωση...</div>';
+
+    var data = await sbGet('chat_qa', 'order=sort_order.asc');
+    if (!data || data.length === 0) {
+        container.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-dim);">Δεν υπάρχουν Q&A entries.</div>';
+        return;
+    }
+
+    container.innerHTML = data.map(function(q) {
+        var active = q.is_active ? '<span style="color:var(--green);">●</span>' : '<span style="color:var(--red);">○</span>';
+        var kws = (q.keywords || []).slice(0,4).join(', ');
+        return '<div class="item-row">' +
+            '<div class="item-info">' +
+                '<div class="item-title">' + active + ' #' + (q.sort_order || '?') + ' ' + q.question + '<span class="tag-badge">' + (q.category || '') + '</span></div>' +
+                '<div class="item-meta">Keywords: ' + kws + (q.keywords && q.keywords.length > 4 ? '...' : '') + '</div>' +
+            '</div>' +
+            '<div class="item-actions">' +
+                '<button class="item-btn" onclick="editQaEntry(' + q.id + ')" title="Επεξεργασία">✏️</button>' +
+                '<button class="item-btn del" onclick="deleteQaEntry(' + q.id + ')" title="Διαγραφή">✕</button>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+}
+
+// ========== EDIT BLOG POST ==========
+async function editBlogPost(id) {
+    var data = await sbGet('blog_posts', 'id=eq.' + id);
+    if (!data || !data[0]) return;
+    var p = data[0];
+
+    switchTab('blog');
+
+    document.getElementById('blogEditId').value = p.id;
+    document.getElementById('blogTitle').value = p.title || '';
+    document.getElementById('blogTag').value = p.tag || 'Γενικά';
+    document.getElementById('blogEmoji').value = p.emoji || '📄';
+    document.getElementById('blogSummary').value = p.summary || '';
+    document.getElementById('blogSlug').value = p.slug || '';
+    document.getElementById('blogMetaTitle').value = p.meta_title || '';
+    document.getElementById('blogMetaDesc').value = p.meta_description || '';
+    document.getElementById('blogImagePos').value = p.image_position || 'center';
+
+    // Set published toggle
+    var pubToggle = document.getElementById('blogPublished');
+    if (p.published) pubToggle.classList.add('on');
+    else pubToggle.classList.remove('on');
+
+    // Load content into editor
+    document.getElementById('blogEditor').innerHTML = p.content || '';
+
+    // Show existing image
+    if (p.image_url) {
+        var area = document.getElementById('blogUploadArea');
+        area.classList.add('has-file');
+        area.innerHTML = '<img src="' + p.image_url + '" class="upload-preview"><div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.35rem;">Τρέχουσα εικόνα (κλικ για αλλαγή)</div>';
+        area.onclick = function() { document.getElementById('blogImage').click(); };
+    }
+
+    document.getElementById('blogFormTitle').textContent = '✏️ Επεξεργασία: ' + p.title;
+    document.getElementById('blogSaveBtn').textContent = '💾 Ενημέρωση';
+
+    updateSeoPreview();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ========== EDIT Q&A ==========
+async function editQaEntry(id) {
+    var data = await sbGet('chat_qa', 'id=eq.' + id);
+    if (!data || !data[0]) return;
+    var q = data[0];
+
+    switchTab('qa');
+
+    document.getElementById('qaEditId').value = q.id;
+    document.getElementById('qaQuestion').value = q.question || '';
+    document.getElementById('qaCategory').value = q.category || 'general';
+    document.getElementById('qaSortOrder').value = q.sort_order || '';
+
+    // Active toggle
+    var actToggle = document.getElementById('qaActive');
+    if (q.is_active) actToggle.classList.add('on');
+    else actToggle.classList.remove('on');
+
+    // Keywords
+    qaKeywordList = q.keywords || [];
+    renderKeywords();
+
+    // Answer
+    document.getElementById('qaEditor').innerHTML = q.answer || '';
+
+    document.getElementById('qaFormTitle').textContent = '💬 Επεξεργασία: ' + q.question;
+    document.getElementById('qaSaveBtn').textContent = '💾 Ενημέρωση';
+
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ========== DELETE ==========
+async function deleteBlogPost(id) {
+    if (!confirm('Σίγουρα θες να διαγράψεις αυτό το άρθρο;')) return;
+    try {
+        await sbDelete('blog_posts', id);
+        loadBlogList();
+    } catch(e) { alert('Σφάλμα: ' + e.message); }
+}
+
+async function deleteQaEntry(id) {
+    if (!confirm('Σίγουρα θες να διαγράψεις αυτό το Q&A;')) return;
+    try {
+        await sbDelete('chat_qa', id);
+        loadQaList();
+    } catch(e) { alert('Σφάλμα: ' + e.message); }
+}
+
+// ========== RESET FORMS ==========
+function resetBlogForm() {
+    document.getElementById('blogEditId').value = '';
+    document.getElementById('blogTitle').value = '';
+    document.getElementById('blogTag').value = 'Άδειες';
+    document.getElementById('blogEmoji').value = '📄';
+    document.getElementById('blogSummary').value = '';
+    document.getElementById('blogSlug').value = '';
+    document.getElementById('blogMetaTitle').value = '';
+    document.getElementById('blogMetaDesc').value = '';
+    document.getElementById('blogImagePos').value = 'center';
+    document.getElementById('blogEditor').innerHTML = '';
+    document.getElementById('blogSource').value = '';
+    document.getElementById('blogPublished').classList.add('on');
+    document.getElementById('blogFormTitle').textContent = '✏️ Νέο Άρθρο';
+    document.getElementById('blogSaveBtn').textContent = '💾 Δημοσίευση';
+    document.getElementById('blogStatus').className = 'status-msg';
+    document.getElementById('blogStatus').style.display = 'none';
+
+    // Reset upload area
+    var area = document.getElementById('blogUploadArea');
+    area.classList.remove('has-file');
+    area.innerHTML = '<input type="file" id="blogImage" accept="image/*" style="display:none;" onchange="previewImage(this,\'blogUploadArea\')"><div id="blogImageText">📷 Σύρε ή κλίκαρε για εικόνα</div>';
+    area.onclick = function() { document.getElementById('blogImage').click(); };
+
+    // Reset source view
+    document.getElementById('blogEditor').style.display = 'block';
+    document.getElementById('blogSource').style.display = 'none';
+    document.getElementById('blogSourceBtn').classList.remove('active');
+
+    updateSeoPreview();
+}
+
+function resetQaForm() {
+    document.getElementById('qaEditId').value = '';
+    document.getElementById('qaQuestion').value = '';
+    document.getElementById('qaCategory').value = 'leave';
+    document.getElementById('qaSortOrder').value = '';
+    document.getElementById('qaEditor').innerHTML = '';
+    document.getElementById('qaSource').value = '';
+    document.getElementById('qaActive').classList.add('on');
+    document.getElementById('qaFormTitle').textContent = '💬 Νέο Q&A Entry';
+    document.getElementById('qaSaveBtn').textContent = '💾 Αποθήκευση';
+    document.getElementById('qaStatus').className = 'status-msg';
+    document.getElementById('qaStatus').style.display = 'none';
+    document.getElementById('qaSqlPreview').textContent = '-- Συμπλήρωσε τα πεδία παραπάνω...';
+
+    qaKeywordList = [];
+    renderKeywords();
+
+    // Reset source view
+    document.getElementById('qaEditor').style.display = 'block';
+    document.getElementById('qaSource').style.display = 'none';
+    document.getElementById('qaSourceBtn').classList.remove('active');
+}
+
+// ========== HELPERS ==========
+function showStatus(el, type, msg) {
+    el.className = 'status-msg ' + type;
+    el.textContent = msg;
+    el.style.display = 'block';
+    if (type === 'success') {
+        setTimeout(function() { el.style.display = 'none'; }, 3000);
+    }
+}
+
+// Listen for input changes to update SQL preview
+document.getElementById('qaQuestion').addEventListener('input', updateSqlPreview);
+document.getElementById('qaCategory').addEventListener('change', updateSqlPreview);
+document.getElementById('qaSortOrder').addEventListener('input', updateSqlPreview);
+document.getElementById('qaEditor').addEventListener('input', updateSqlPreview);
+
+</script>
+</body>
+</html>
