@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KnowYourWork — Γνώρισε τα δικαιώματά σου</title>
-<meta name="description" content="Εργαλεία για κάθε εργαζόμενο. Υπολογιστές, οδηγοί, σύμβουλος. Βασισμένα στην ελληνική εργατική νομοθεσία.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif&family=Press+Start+2P&display=swap" rel="stylesheet">
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Μάθε τα εργασιακά σου δικαιώματα. Υπολογιστές μισθού, αδειών, αποζημίωσης, υπερωριών. Οδηγοί & εργαλεία βασισμένα στην ελληνική νομοθεσία.">
+    <meta name="keywords" content="εργατικά δικαιώματα, κατώτατος μισθός, άδεια, αποζημίωση απόλυσης, υπερωρίες, δώρο Χριστουγέννων, ΕΦΚΑ, εργασία Ελλάδα">
+    <meta property="og:title" content="KnowYourWork — Γνώρισε τα Δικαιώματά σου">
+    <meta property="og:description" content="Υπολογιστές, οδηγοί & εργαλεία για εργαζόμενους στην Ελλάδα.">
+    <title>KnowYourWork — Γνώρισε τα Δικαιώματά σου</title>
+    <style>
 /* ============================================
    KnowYourWork — Τα Δίνουμε Όλα
    ============================================ */
@@ -415,10 +416,9 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
     .blog-grid { grid-template-columns: 1fr; }
 }
 
-</style>
+    </style>
 </head>
 <body>
-<!-- ===== NAVIGATION ===== -->
 <nav>
     <div class="nav-inner">
         <div class="logo" onclick="showPage('home')">
@@ -642,6 +642,86 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
         </div>
     </div>
 </section>
+<!-- ==================== MINIMUM WAGE ==================== -->
+<section id="minwage" class="page">
+<div style="max-width:520px;margin:0 auto;padding:2rem 1.5rem;">
+    <div class="page-header" style="text-align:center;">
+        <h2 style="position:relative;display:inline-block;">Κατώτατος Μισθός 2025<div class="rc-tip" style="top:-2px;right:-20px;" onclick="var tt=this.nextElementSibling;tt.classList.toggle('tt-open');event.stopPropagation();"></div><div class="rc-tooltip" style="top:20px;right:-20px;width:220px;"><div class="tt-title">Τι είναι αυτό;</div>Παντού που βλέπεις αυτή την πορτοκαλί τελίτσα κρύβεται μια επεξήγηση. Πάτα την για να δεις πώς υπολογίστηκε κάτι ή για να μάθεις περισσότερα.</div></h2>
+        <p>Σε ισχύ από 1 Απριλίου 2025</p>
+    </div>
+
+    <!-- Hero amount -->
+    <div style="text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:1.5rem;">
+        <div id="mwTypeLabel" style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Βασικός Κατώτατος Μισθός</div>
+        <div id="mwAmount" style="font-size:3rem;font-weight:700;color:var(--cyan);line-height:1.1;margin:0.5rem 0;">€880</div>
+        <div id="mwSubLabel" style="font-size:0.85rem;color:var(--text-muted);">μικτά / μήνα (πλήρης απασχόληση)</div>
+        <div id="mwDaily" style="font-size:0.85rem;color:var(--text-dim);margin-top:0.3rem;">Ημερομίσθιο: €39,33</div>
+    </div>
+
+    <!-- Τύπος απασχόλησης -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;">
+        <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:0.75rem;">Τύπος Αποδοχών</label>
+        <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+            <button id="mwBtnMonthly" class="calc-tab active" onclick="setMwPayType('monthly')" style="flex:1;font-size:0.85rem;">Μισθωτός</button>
+            <button id="mwBtnDaily" class="calc-tab" onclick="setMwPayType('daily')" style="flex:1;font-size:0.85rem;">Ημερομίσθιος</button>
+        </div>
+        <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:0.75rem;">Ωράριο Απασχόλησης</label>
+        <div style="display:flex;gap:0.5rem;">
+            <button id="mwBtnFull" class="calc-tab active" onclick="setMwSchedule('full')" style="flex:1;font-size:0.85rem;">Πλήρες (8ωρο)</button>
+            <button id="mwBtnPart" class="calc-tab" onclick="setMwSchedule('part')" style="flex:1;font-size:0.85rem;">Μερική</button>
+        </div>
+        <div id="mwPartHours" style="display:none;margin-top:1rem;">
+            <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:0.5rem;">Ώρες εργασίας / ημέρα</label>
+            <input type="range" id="mwHours" min="1" max="7" value="4" style="width:100%;" oninput="updateMinWage()">
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-dim);margin-top:0.25rem;">
+                <span>1 ώρα</span>
+                <span id="mwHoursLabel" style="color:var(--spark);font-weight:600;">4 ώρες / ημέρα</span>
+                <span>7 ώρες</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Τριετίες selector -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;">
+        <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:0.5rem;position:relative;display:inline-block;">Αναγνωρισμένη προϋπηρεσία<div class="rc-tip" style="top:-2px;right:-20px;" onclick="var tt=this.nextElementSibling;tt.classList.toggle('tt-open');event.stopPropagation();"></div><div class="rc-tooltip" style="top:20px;right:-20px;width:auto;left:0;"><div class="tt-title">Πώς βρίσκω την προϋπηρεσία μου;</div>Μπες στο <strong>gov.gr</strong> → Βεβαίωση Προϋπηρεσίας.<br><br>Βρες και πρόσθεσε τα ένσημα από τις χρονιές <strong>πριν τις 14/2/2012</strong> και <strong>μετά την 1/1/2024</strong>.<br><br>Διαίρεσε τα συνολικά ένσημα με το <strong>300</strong> (= ένσημα 1 έτους).<br><br>Παράδειγμα: 900 ένσημα ÷ 300 = <strong>3 χρόνια</strong> = 1 τριετία.</div></label>
+        <div style="font-size:0.78rem;color:var(--text-dim);line-height:1.6;margin-bottom:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,107,53,0.06);border:1px solid rgba(255,107,53,0.15);border-radius:8px;">
+            Μετράει μόνο η προϋπηρεσία <strong>πριν τις 14/2/2012</strong> και <strong>μετά την 1/1/2024</strong>.<br>
+            Το διάστημα 14/2/2012 – 31/12/2023 <strong>δεν προσμετράται</strong> (Ν.5053/2023, αρ.33).
+        </div>
+        <input type="range" id="mwYears" min="0" max="30" value="0" style="width:100%;" oninput="updateMinWage()">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-dim);margin-top:0.25rem;">
+            <span>0 χρόνια</span>
+            <span id="mwYearsLabel" style="color:var(--cyan);font-weight:600;">0 χρόνια → 0 τριετίες</span>
+            <span>30 χρόνια</span>
+        </div>
+    </div>
+
+    <!-- Check salary -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;">
+        <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:0.75rem;">Πόσα παίρνεις μικτά;</label>
+        <input type="number" id="mwSalary" placeholder="π.χ. 950" style="width:100%;padding:0.75rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1rem;">
+        <div id="mwCheck" style="margin-top:0.75rem;display:none;"></div>
+    </div>
+
+    <!-- Πίνακας Κλιμάκωσης -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
+        <h3 style="font-size:0.9rem;color:var(--text-muted);margin-bottom:1rem;" id="mwTableTitle">Πίνακας Κλιμάκωσης — Πλήρης Απασχόληση</h3>
+        <div id="mwTable"></div>
+        <div style="font-size:0.75rem;color:var(--text-dim);margin-top:1rem;line-height:1.5;">
+            * Μετράει: πριν 14/2/2012 + μετά 1/1/2024. Το 14/2/2012 – 31/12/2023 δεν μετράει.<br>
+            * Υπάλληλοι: 10% × τριετία, max 3 τριετίες (30%).<br>
+            * Εργατοτεχνίτες: 5% × τριετία, max 6 τριετίες (30%).<br>
+            * Μερική απασχόληση: αναλογικά με τις ώρες.<br>
+            * Ο υποκατώτατος καταργήθηκε το 2019 — ισχύει για ΟΛΟΥΣ.<br>
+            * Πηγή: Ν.5053/2023 αρ.33, ΥΑ 25058/2025
+        </div>
+    </div>
+
+    <div style="text-align:center;margin-top:1.5rem;">
+        <button class="calc-btn" onclick="showPage('calculators')" style="max-width:300px;">💶 Υπολόγισε τον Καθαρό Μισθό σου</button>
+    </div>
+</div>
+</section>
 <!-- ==================== CALCULATORS ==================== -->
 <section id="calculators" class="page">
     <div class="calc-page">
@@ -754,85 +834,38 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
         </div>
     </div>
 </section>
-<!-- ==================== MINIMUM WAGE ==================== -->
-<section id="minwage" class="page">
-<div style="max-width:520px;margin:0 auto;padding:2rem 1.5rem;">
-    <div class="page-header" style="text-align:center;">
-        <h2 style="position:relative;display:inline-block;">Κατώτατος Μισθός 2025<div class="rc-tip" style="top:-2px;right:-20px;" onclick="var tt=this.nextElementSibling;tt.classList.toggle('tt-open');event.stopPropagation();"></div><div class="rc-tooltip" style="top:20px;right:-20px;width:220px;"><div class="tt-title">Τι είναι αυτό;</div>Παντού που βλέπεις αυτή την πορτοκαλί τελίτσα κρύβεται μια επεξήγηση. Πάτα την για να δεις πώς υπολογίστηκε κάτι ή για να μάθεις περισσότερα.</div></h2>
-        <p>Σε ισχύ από 1 Απριλίου 2025</p>
-    </div>
-
-    <!-- Hero amount -->
-    <div style="text-align:center;background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:1.5rem;">
-        <div id="mwTypeLabel" style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Βασικός Κατώτατος Μισθός</div>
-        <div id="mwAmount" style="font-size:3rem;font-weight:700;color:var(--cyan);line-height:1.1;margin:0.5rem 0;">€880</div>
-        <div id="mwSubLabel" style="font-size:0.85rem;color:var(--text-muted);">μικτά / μήνα (πλήρης απασχόληση)</div>
-        <div id="mwDaily" style="font-size:0.85rem;color:var(--text-dim);margin-top:0.3rem;">Ημερομίσθιο: €39,33</div>
-    </div>
-
-    <!-- Τύπος απασχόλησης -->
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;">
-        <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:0.75rem;">Τύπος Αποδοχών</label>
-        <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
-            <button id="mwBtnMonthly" class="calc-tab active" onclick="setMwPayType('monthly')" style="flex:1;font-size:0.85rem;">Μισθωτός</button>
-            <button id="mwBtnDaily" class="calc-tab" onclick="setMwPayType('daily')" style="flex:1;font-size:0.85rem;">Ημερομίσθιος</button>
-        </div>
-        <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:0.75rem;">Ωράριο Απασχόλησης</label>
-        <div style="display:flex;gap:0.5rem;">
-            <button id="mwBtnFull" class="calc-tab active" onclick="setMwSchedule('full')" style="flex:1;font-size:0.85rem;">Πλήρες (8ωρο)</button>
-            <button id="mwBtnPart" class="calc-tab" onclick="setMwSchedule('part')" style="flex:1;font-size:0.85rem;">Μερική</button>
-        </div>
-        <div id="mwPartHours" style="display:none;margin-top:1rem;">
-            <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:0.5rem;">Ώρες εργασίας / ημέρα</label>
-            <input type="range" id="mwHours" min="1" max="7" value="4" style="width:100%;" oninput="updateMinWage()">
-            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-dim);margin-top:0.25rem;">
-                <span>1 ώρα</span>
-                <span id="mwHoursLabel" style="color:var(--spark);font-weight:600;">4 ώρες / ημέρα</span>
-                <span>7 ώρες</span>
+<!-- ===== BLOG ===== -->
+<section id="blog" class="page">
+    <div class="blog-page">
+        <div id="blogList">
+            <div class="page-header">
+                <h2>Άρθρα & Οδηγοί</h2>
+                <p id="blogSubtitle">Ενημερώσου για τα εργασιακά σου δικαιώματα</p>
             </div>
+            <div id="blogFilters" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+                <button class="blog-filter active" onclick="filterBlog('all',this)">Όλα</button>
+                <button class="blog-filter" onclick="filterBlog('Εργαζόμενη Μαμά',this)">Εργαζόμενη Μαμά</button>
+                <button class="blog-filter" onclick="filterBlog('Εργαζόμενος Πατέρας',this)">Εργαζόμενος Πατέρας</button>
+                <button class="blog-filter" onclick="filterBlog('Νέοι',this)">Νέοι έως 25</button>
+                <button class="blog-filter" onclick="filterBlog('Άδειες',this)">Άδειες</button>
+                <button class="blog-filter" onclick="filterBlog('Μισθός',this)">Μισθός</button>
+                <button class="blog-filter" onclick="filterBlog('Απόλυση',this)">Απόλυση</button>
+            </div>
+            <div class="blog-grid" id="blogGrid"></div>
         </div>
+        <div id="blogArticle" class="blog-article" style="display:none;"></div>
     </div>
+</section>
 
-    <!-- Τριετίες selector -->
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;">
-        <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:0.5rem;position:relative;display:inline-block;">Αναγνωρισμένη προϋπηρεσία<div class="rc-tip" style="top:-2px;right:-20px;" onclick="var tt=this.nextElementSibling;tt.classList.toggle('tt-open');event.stopPropagation();"></div><div class="rc-tooltip" style="top:20px;right:-20px;width:auto;left:0;"><div class="tt-title">Πώς βρίσκω την προϋπηρεσία μου;</div>Μπες στο <strong>gov.gr</strong> → Βεβαίωση Προϋπηρεσίας.<br><br>Βρες και πρόσθεσε τα ένσημα από τις χρονιές <strong>πριν τις 14/2/2012</strong> και <strong>μετά την 1/1/2024</strong>.<br><br>Διαίρεσε τα συνολικά ένσημα με το <strong>300</strong> (= ένσημα 1 έτους).<br><br>Παράδειγμα: 900 ένσημα ÷ 300 = <strong>3 χρόνια</strong> = 1 τριετία.</div></label>
-        <div style="font-size:0.78rem;color:var(--text-dim);line-height:1.6;margin-bottom:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,107,53,0.06);border:1px solid rgba(255,107,53,0.15);border-radius:8px;">
-            Μετράει μόνο η προϋπηρεσία <strong>πριν τις 14/2/2012</strong> και <strong>μετά την 1/1/2024</strong>.<br>
-            Το διάστημα 14/2/2012 – 31/12/2023 <strong>δεν προσμετράται</strong> (Ν.5053/2023, αρ.33).
-        </div>
-        <input type="range" id="mwYears" min="0" max="30" value="0" style="width:100%;" oninput="updateMinWage()">
-        <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-dim);margin-top:0.25rem;">
-            <span>0 χρόνια</span>
-            <span id="mwYearsLabel" style="color:var(--cyan);font-weight:600;">0 χρόνια → 0 τριετίες</span>
-            <span>30 χρόνια</span>
-        </div>
-    </div>
+<!-- Admin panel is now at /admin.html (protected by Cloudflare Access) -->
 
-    <!-- Check salary -->
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;">
-        <label style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:0.75rem;">Πόσα παίρνεις μικτά;</label>
-        <input type="number" id="mwSalary" placeholder="π.χ. 950" style="width:100%;padding:0.75rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1rem;">
-        <div id="mwCheck" style="margin-top:0.75rem;display:none;"></div>
+<!-- ===== LEGAL ===== -->
+<section id="legal" class="page">
+    <div style="max-width:700px;margin:0 auto;padding:2rem 1.5rem;">
+        <button onclick="showPage('home')" style="background:none;border:none;color:var(--cyan);cursor:pointer;font-family:'DM Sans';font-size:0.9rem;margin-bottom:1.5rem;">← Αρχική</button>
+        <h2 id="legalTitle" style="font-family:'Instrument Serif',serif;font-size:2rem;margin-bottom:1.5rem;"></h2>
+        <div id="legalContent" style="color:var(--text-muted);line-height:1.8;font-size:0.95rem;"></div>
     </div>
-
-    <!-- Πίνακας Κλιμάκωσης -->
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;">
-        <h3 style="font-size:0.9rem;color:var(--text-muted);margin-bottom:1rem;" id="mwTableTitle">Πίνακας Κλιμάκωσης — Πλήρης Απασχόληση</h3>
-        <div id="mwTable"></div>
-        <div style="font-size:0.75rem;color:var(--text-dim);margin-top:1rem;line-height:1.5;">
-            * Μετράει: πριν 14/2/2012 + μετά 1/1/2024. Το 14/2/2012 – 31/12/2023 δεν μετράει.<br>
-            * Υπάλληλοι: 10% × τριετία, max 3 τριετίες (30%).<br>
-            * Εργατοτεχνίτες: 5% × τριετία, max 6 τριετίες (30%).<br>
-            * Μερική απασχόληση: αναλογικά με τις ώρες.<br>
-            * Ο υποκατώτατος καταργήθηκε το 2019 — ισχύει για ΟΛΟΥΣ.<br>
-            * Πηγή: Ν.5053/2023 αρ.33, ΥΑ 25058/2025
-        </div>
-    </div>
-
-    <div style="text-align:center;margin-top:1.5rem;">
-        <button class="calc-btn" onclick="showPage('calculators')" style="max-width:300px;">💶 Υπολόγισε τον Καθαρό Μισθό σου</button>
-    </div>
-</div>
 </section>
 <!-- ===== OFFICE QUEST RPG ===== -->
 <section id="game" class="page">
@@ -926,105 +959,6 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
         </div>
     </div>
 </section>
-<!-- ===== BLOG ===== -->
-<section id="blog" class="page">
-    <div class="blog-page">
-        <div id="blogList">
-            <div class="page-header">
-                <h2>Άρθρα & Οδηγοί</h2>
-                <p id="blogSubtitle">Ενημερώσου για τα εργασιακά σου δικαιώματα</p>
-            </div>
-            <div id="blogFilters" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;">
-                <button class="blog-filter active" onclick="filterBlog('all',this)">Όλα</button>
-                <button class="blog-filter" onclick="filterBlog('Εργαζόμενη Μαμά',this)">Εργαζόμενη Μαμά</button>
-                <button class="blog-filter" onclick="filterBlog('Εργαζόμενος Πατέρας',this)">Εργαζόμενος Πατέρας</button>
-                <button class="blog-filter" onclick="filterBlog('Νέοι',this)">Νέοι έως 25</button>
-                <button class="blog-filter" onclick="filterBlog('Άδειες',this)">Άδειες</button>
-                <button class="blog-filter" onclick="filterBlog('Μισθός',this)">Μισθός</button>
-                <button class="blog-filter" onclick="filterBlog('Απόλυση',this)">Απόλυση</button>
-            </div>
-            <div class="blog-grid" id="blogGrid"></div>
-        </div>
-        <div id="blogArticle" class="blog-article" style="display:none;"></div>
-    </div>
-</section>
-
-<!-- ===== ADMIN ===== -->
-<section id="admin" class="page">
-    <div style="max-width:800px;margin:0 auto;padding:2rem;">
-        <div class="page-header">
-            <h2>🔒 Admin Panel</h2>
-            <p>Διαχείριση άρθρων</p>
-        </div>
-        
-        <!-- Login -->
-        <div id="adminLogin" class="dash-section" style="max-width:400px;margin:0 auto;">
-            <div class="dash-section-header"><h3>Σύνδεση</h3></div>
-            <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
-                <div class="form-group"><label>Κωδικός Admin</label><input type="password" id="adminPass" placeholder="Κωδικός..." style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.925rem;color:var(--text);font-family:'DM Sans';"></div>
-                <button class="btn-primary" onclick="adminLogin()">Είσοδος</button>
-                <p id="adminError" style="color:var(--red);font-size:0.8rem;display:none;">Λάθος κωδικός</p>
-            </div>
-        </div>
-
-        <!-- Admin Content (μετά το login) -->
-        <div id="adminContent" style="display:none;">
-            <!-- Φόρμα νέου/επεξεργασίας άρθρου -->
-            <div class="dash-section" style="margin-bottom:1.5rem;">
-                <div class="dash-section-header"><h3 id="adminFormTitle">✏️ Νέο Άρθρο</h3></div>
-                <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1rem;">
-                    <input type="hidden" id="postEditId" value="">
-                    <div class="form-group"><label>Τίτλος</label><input type="text" id="postTitle" placeholder="π.χ. Ετήσια Άδεια 2026" style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.925rem;color:var(--text);font-family:'DM Sans';"></div>
-                    <div style="display:flex;gap:1rem;">
-                        <div class="form-group" style="flex:1;"><label>Κατηγορία</label><input type="text" id="postTag" placeholder="π.χ. Άδειες" style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.925rem;color:var(--text);font-family:'DM Sans';"></div>
-                        <div class="form-group" style="flex:0 0 80px;"><label>Emoji</label><input type="text" id="postEmoji" value="📄" style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.925rem;color:var(--text);font-family:'DM Sans';text-align:center;"></div>
-                    </div>
-                    <div class="form-group"><label>Εικόνα Άρθρου</label>
-                        <div style="display:flex;gap:0.75rem;align-items:center;">
-                            <input type="file" id="postImage" accept="image/*" style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.5rem;font-size:0.85rem;color:var(--text);font-family:'DM Sans';flex:1;">
-                            <div id="postImagePreview" style="width:60px;height:60px;border-radius:8px;background:var(--bg-input);border:1px solid var(--border);display:none;overflow:hidden;flex-shrink:0;"><img id="postImagePreviewImg" style="width:100%;height:100%;object-fit:cover;"></div>
-                        </div>
-                        <div style="display:flex;gap:0.75rem;align-items:center;margin-top:0.5rem;">
-                            <label style="font-size:0.8rem;color:var(--text-muted);white-space:nowrap;">Θέση εικόνας:</label>
-                            <select id="postImagePos" style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.4rem 0.6rem;font-size:0.8rem;color:var(--text);font-family:'DM Sans';">
-                                <option value="top">Πάνω μέρος</option>
-                                <option value="20%">Λίγο πιο κάτω</option>
-                                <option value="center" selected>Κέντρο</option>
-                                <option value="70%">Λίγο πιο κάτω</option>
-                                <option value="bottom">Κάτω μέρος</option>
-                            </select>
-                        </div>
-                        <span id="postImageStatus" style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;"></span>
-                    </div>
-                    <div class="form-group"><label>Περίληψη</label><input type="text" id="postSummary" placeholder="Σύντομη περιγραφή..." style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.925rem;color:var(--text);font-family:'DM Sans';"></div>
-                    <div class="form-group"><label>Περιεχόμενο (HTML ή απλό κείμενο)</label><textarea id="postContent" rows="10" placeholder="Γράψε το άρθρο εδώ... Μπορείς να χρησιμοποιήσεις HTML tags: &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;ul&gt;, &lt;li&gt;" style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem 1rem;font-size:0.925rem;color:var(--text);font-family:'DM Sans';resize:vertical;"></textarea></div>
-                    <div style="display:flex;gap:0.75rem;">
-                        <button class="btn-primary" onclick="savePost()" id="postSaveBtn">💾 Δημοσίευση</button>
-                        <button class="btn-secondary" onclick="cancelEdit()">Ακύρωση</button>
-                    </div>
-                    <p id="postSuccess" style="color:var(--green);font-size:0.85rem;display:none;">✅ Το άρθρο αποθηκεύτηκε!</p>
-                    <p id="postError" style="color:var(--red);font-size:0.85rem;display:none;"></p>
-                </div>
-            </div>
-
-            <!-- Λίστα υπαρχόντων άρθρων -->
-            <div class="dash-section">
-                <div class="dash-section-header"><h3>📚 Υπάρχοντα Άρθρα</h3><button class="btn-sm" onclick="loadAdminPosts()">🔄 Ανανέωση</button></div>
-                <div id="adminPostsList" style="padding:1rem;"></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ===== LEGAL ===== -->
-<section id="legal" class="page">
-    <div style="max-width:700px;margin:0 auto;padding:2rem 1.5rem;">
-        <button onclick="showPage('home')" style="background:none;border:none;color:var(--cyan);cursor:pointer;font-family:'DM Sans';font-size:0.9rem;margin-bottom:1.5rem;">← Αρχική</button>
-        <h2 id="legalTitle" style="font-family:'Instrument Serif',serif;font-size:2rem;margin-bottom:1.5rem;"></h2>
-        <div id="legalContent" style="color:var(--text-muted);line-height:1.8;font-size:0.95rem;"></div>
-    </div>
-</section>
-<!-- ===== FOOTER ===== -->
 <footer id="site-footer">
     <div class="footer-inner">
         <div class="footer-grid">
@@ -1052,7 +986,7 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
             </div>
         </div>
         <div class="footer-bottom">
-            <span onclick="showPage('admin')" style="cursor:pointer;">© 2026 KnowYourWork. Με επιφύλαξη παντός δικαιώματος.</span>
+            <span onclick="window.location.href='/admin.html'" style="cursor:pointer;">© 2026 KnowYourWork. Με επιφύλαξη παντός δικαιώματος.</span>
             <div style="display:flex;gap:1.5rem;">
                 <a href="#" onclick="showLegal('terms');return false;">Όροι Χρήσης</a>
                 <a href="#" onclick="showLegal('privacy');return false;">Απόρρητο</a> <a href="#" onclick="showLegal('disclaimer');return false;">Αποποίηση Ευθύνης</a>
@@ -1060,7 +994,6 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
         </div>
     </div>
 </footer>
-
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 /* ============================================
@@ -2502,206 +2435,7 @@ function showBlogCategory(category) {
     }, 100);
 }
 
-// ========== ADMIN PANEL ==========
-var ADMIN_PASS = 'knowyourwork2026'; // Άλλαξέ τον!
-
-function adminLogin() {
-    var pass = document.getElementById('adminPass').value;
-    if (pass === ADMIN_PASS) {
-        document.getElementById('adminLogin').style.display = 'none';
-        document.getElementById('adminContent').style.display = 'block';
-        loadAdminPosts();
-    } else {
-        document.getElementById('adminError').style.display = 'block';
-    }
-}
-
-async function savePost() {
-    var editId = document.getElementById('postEditId').value;
-    var title = document.getElementById('postTitle').value.trim();
-    var tag = document.getElementById('postTag').value.trim() || 'Γενικά';
-    var emoji = document.getElementById('postEmoji').value.trim() || '📄';
-    var summary = document.getElementById('postSummary').value.trim();
-    var content = document.getElementById('postContent').value.trim();
-    
-    if (!title || !content) { 
-        document.getElementById('postError').textContent = '❌ Συμπλήρωσε τίτλο και περιεχόμενο';
-        document.getElementById('postError').style.display = 'block';
-        return; 
-    }
-    
-    if (!content.includes('<')) {
-        content = content.split('\n\n').map(function(p) { return '<p>' + p.replace(/\n/g, '<br>') + '</p>'; }).join('');
-    }
-    
-    var slug = title.toLowerCase()
-        .replace(/[αά]/g,'a').replace(/[εέ]/g,'e').replace(/[ηή]/g,'i').replace(/[ιί]/g,'i')
-        .replace(/[οό]/g,'o').replace(/[υύ]/g,'y').replace(/[ωώ]/g,'o')
-        .replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
-    
-    // Upload image if selected
-    var imageUrl = null;
-    var fileInput = document.getElementById('postImage');
-    if (fileInput.files && fileInput.files[0]) {
-        document.getElementById('postImageStatus').textContent = '⏳ Ανέβασμα εικόνας...';
-        imageUrl = await uploadImage(fileInput.files[0]);
-        if (!imageUrl) {
-            document.getElementById('postError').textContent = '❌ Σφάλμα στο ανέβασμα εικόνας';
-            document.getElementById('postError').style.display = 'block';
-            document.getElementById('postImageStatus').textContent = '';
-            return;
-        }
-        document.getElementById('postImageStatus').textContent = '✅ Εικόνα ανέβηκε!';
-    }
-    
-    try {
-        var postData = {
-            title: title, slug: slug, summary: summary,
-            content: content, tag: tag, emoji: emoji, published: true,
-            image_position: document.getElementById('postImagePos').value
-        };
-        if (imageUrl) postData.image_url = imageUrl;
-        
-        if (editId) {
-            // Update existing post
-            await supabaseUpdate('blog_posts', editId, postData);
-        } else {
-            // Insert new post
-            await supabaseInsert('blog_posts', postData);
-        }
-        
-        document.getElementById('postSuccess').style.display = 'block';
-        document.getElementById('postError').style.display = 'none';
-        cancelEdit();
-        loadAdminPosts();
-        loadBlogPosts();
-        
-        setTimeout(function() { document.getElementById('postSuccess').style.display = 'none'; }, 3000);
-    } catch(e) {
-        document.getElementById('postError').textContent = '❌ Σφάλμα: ' + e.message;
-        document.getElementById('postError').style.display = 'block';
-    }
-}
-
-async function uploadImage(file) {
-    try {
-        var ext = file.name.split('.').pop();
-        var fileName = Date.now() + '-' + Math.random().toString(36).substr(2,6) + '.' + ext;
-        var url = SUPABASE_URL + '/storage/v1/object/blog-images/' + fileName;
-        var res = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': 'Bearer ' + SUPABASE_KEY,
-                'Content-Type': file.type
-            },
-            body: file
-        });
-        if (!res.ok) throw new Error('Upload failed: ' + res.status);
-        return SUPABASE_URL + '/storage/v1/object/public/blog-images/' + fileName;
-    } catch(e) {
-        console.log('Upload error:', e);
-        return null;
-    }
-}
-
-async function supabaseUpdate(table, id, data) {
-    var url = SUPABASE_URL + '/rest/v1/' + table + '?id=eq.' + id;
-    var res = await fetch(url, {
-        method: 'PATCH',
-        headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Update failed: ' + res.status);
-}
-
-function cancelEdit() {
-    document.getElementById('postEditId').value = '';
-    document.getElementById('postTitle').value = '';
-    document.getElementById('postTag').value = '';
-    document.getElementById('postEmoji').value = '📄';
-    document.getElementById('postSummary').value = '';
-    document.getElementById('postContent').value = '';
-    document.getElementById('postImage').value = '';
-    document.getElementById('postImagePreview').style.display = 'none';
-    document.getElementById('postImageStatus').textContent = '';
-    document.getElementById('postImagePos').value = 'center';
-    document.getElementById('adminFormTitle').textContent = '✏️ Νέο Άρθρο';
-    document.getElementById('postSaveBtn').textContent = '💾 Δημοσίευση';
-}
-
-async function editPost(id) {
-    try {
-        var data = await supabaseGet('blog_posts', 'id=eq.' + id);
-        if (!data || data.length === 0) return;
-        var p = data[0];
-        document.getElementById('postEditId').value = p.id;
-        document.getElementById('postTitle').value = p.title || '';
-        document.getElementById('postTag').value = p.tag || '';
-        document.getElementById('postEmoji').value = p.emoji || '📄';
-        document.getElementById('postSummary').value = p.summary || '';
-        document.getElementById('postContent').value = p.content || '';
-        document.getElementById('adminFormTitle').textContent = '✏️ Επεξεργασία: ' + p.title;
-        document.getElementById('postSaveBtn').textContent = '💾 Ενημέρωση';
-        if (p.image_url) {
-            document.getElementById('postImagePreview').style.display = 'block';
-            document.getElementById('postImagePreviewImg').src = p.image_url;
-            document.getElementById('postImageStatus').textContent = 'Τρέχουσα εικόνα (ανέβασε νέα για αντικατάσταση)';
-        }
-        document.getElementById('postImagePos').value = p.image_position || 'center';
-        window.scrollTo({top: document.getElementById('adminContent').offsetTop, behavior: 'smooth'});
-    } catch(e) {
-        console.log('Edit load error:', e);
-    }
-}
-
-async function loadAdminPosts() {
-    try {
-        var data = await supabaseGet('blog_posts', 'order=created_at.desc');
-        if (!data) return;
-        
-        var list = document.getElementById('adminPostsList');
-        if (data.length === 0) {
-            list.innerHTML = '<p style="color:var(--text-muted);padding:1rem;">Δεν υπάρχουν άρθρα.</p>';
-            return;
-        }
-        
-        list.innerHTML = data.map(function(p) {
-            var date = new Date(p.created_at).toLocaleDateString('el-GR');
-            var imgIcon = p.image_url ? '🖼️' : '';
-            return '<div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0.5rem;border-bottom:1px solid var(--border);">' +
-                '<div style="flex:1;min-width:0;">' +
-                    '<span style="margin-right:0.5rem;">' + (p.emoji || '📄') + '</span>' +
-                    '<strong style="font-size:0.9rem;">' + p.title + '</strong> ' + imgIcon +
-                    '<span style="font-size:0.75rem;color:var(--text-dim);margin-left:0.75rem;">' + date + '</span>' +
-                    '<span class="blog-card-tag" style="margin-left:0.75rem;">' + (p.tag || '') + '</span>' +
-                '</div>' +
-                '<div style="display:flex;gap:0.4rem;flex-shrink:0;">' +
-                    '<button class="action-btn approve" onclick="editPost(' + p.id + ')" title="Επεξεργασία" style="font-size:0.8rem;">✏️</button>' +
-                    '<button class="action-btn reject" onclick="deletePost(' + p.id + ')" title="Διαγραφή">✕</button>' +
-                '</div>' +
-            '</div>';
-        }).join('');
-    } catch(e) {
-        console.log('Admin posts load error:', e);
-    }
-}
-
-async function deletePost(id) {
-    if (!confirm('Σίγουρα θες να διαγράψεις αυτό το άρθρο;')) return;
-    try {
-        await supabaseDelete('blog_posts', id);
-        loadAdminPosts();
-        loadBlogPosts();
-    } catch(e) {
-        alert('Σφάλμα: ' + e.message);
-    }
-}
+// ========== ADMIN PANEL — moved to /admin.html ==========
 
 // ========== INIT ==========
 document.addEventListener('DOMContentLoaded', function() {
@@ -2709,20 +2443,6 @@ document.addEventListener('DOMContentLoaded', function() {
     calcTotalPayroll();
     initRC();
     initStories();
-    // Image preview
-    var imgInput = document.getElementById('postImage');
-    if (imgInput) {
-        imgInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('postImagePreviewImg').src = e.target.result;
-                    document.getElementById('postImagePreview').style.display = 'block';
-                };
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-    }
 });
 
 // ========== AUTO-CALCULATE PAYROLL ==========
@@ -3071,8 +2791,6 @@ function storyAnswer(ok,step,choiceText){var chat=document.getElementById('story
 function showStoryEnd(){storyFinished=true;var chat=document.getElementById('storyChat');var pct=Math.round((storyScore/storyTotal)*100);var emoji=pct===100?'🏆':pct>=50?'👍':'📚';var msg=pct===100?'Τέλειο! Ξέρεις τα δικαιώματά σου!':pct>=50?'Καλά πας! Συνέχισε να μαθαίνεις.':'Χρειάζεσαι λίγο διάβασμα!';var d=document.createElement('div');d.className='story-score';d.innerHTML='<div style="font-size:3rem;margin-bottom:0.5rem;">'+emoji+'</div><h2>Σκορ Σεναρίου</h2><div class="score-num">'+storyScore+'/'+storyTotal+'</div><div style="color:var(--text-muted);font-size:0.85rem;margin-top:0.25rem;">'+msg+'</div><button class="rc-next" style="margin-top:1.5rem;max-width:300px;" onclick="backToStories()">Δες κι άλλα σενάρια</button>';chat.appendChild(d);}
 function backToStories(){document.getElementById('storyList').style.display='flex';document.getElementById('storyActive').style.display='none';}
 
-</script>
-<script>
 // ========== OFFICE QUEST RPG ==========
 var T=20,COLS=24,ROWS=24,rpgXP=0,rpgLvl=0,rpgFacts=[],rpgTalking=false;
 var player={x:12,y:18,dir:0};
@@ -3479,4 +3197,5 @@ var _tsx=0,_tsy=0;
 document.addEventListener('touchstart',function(e){_tsx=e.touches[0].clientX;_tsy=e.touches[0].clientY;});
 document.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-_tsx,dy=e.changedTouches[0].clientY-_tsy;if(Math.abs(dx)<20&&Math.abs(dy)<20){rpgInteract();return;}if(Math.abs(dx)>Math.abs(dy)){dx>0?rpgMove(1,0):rpgMove(-1,0);}else{dy>0?rpgMove(0,1):rpgMove(0,-1);}});
 </script>
-</body></html>
+</body>
+</html>
