@@ -476,6 +476,20 @@
 </head>
 <body>
 
+<!-- ===== PASSWORD GATE ===== -->
+<div id="authGate" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;max-width:380px;width:100%;text-align:center;">
+        <div style="font-size:1.1rem;margin-bottom:0.25rem;"><span style="color:#fff;font-weight:400;">Know</span><span style="color:#fff;font-weight:700;">Your</span><span style="color:var(--cyan);font-weight:700;">Work</span></div>
+        <div style="font-size:0.7rem;color:var(--spark);font-weight:600;letter-spacing:0.05em;margin-bottom:1.5rem;">ADMIN</div>
+        <input type="password" id="authPass" placeholder="Κωδικός..." onkeypress="if(event.key==='Enter')checkAuth()" style="width:100%;padding:0.75rem 1rem;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans';font-size:0.95rem;outline:none;margin-bottom:0.75rem;text-align:center;">
+        <button onclick="checkAuth()" style="width:100%;padding:0.7rem;background:var(--accent);color:white;border:none;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;font-family:'DM Sans';">Είσοδος</button>
+        <p id="authError" style="color:var(--red);font-size:0.8rem;margin-top:0.75rem;display:none;">Λάθος κωδικός</p>
+    </div>
+</div>
+
+<!-- ===== MAIN APP (hidden until auth) ===== -->
+<div id="mainApp" style="display:none;">
+
 <!-- ===== TOPBAR ===== -->
 <div class="topbar">
     <div class="topbar-brand">
@@ -1382,5 +1396,40 @@ document.getElementById('qaSortOrder').addEventListener('input', updateSqlPrevie
 document.getElementById('qaEditor').addEventListener('input', updateSqlPreview);
 
 </script>
+
+</div><!-- /mainApp -->
+
+<script>
+// Password gate (fallback security — primary is Cloudflare Access)
+var ADMIN_HASH = '7f1d7029462cecf34581c7cf53bc83246a04fadb6b33804777c58ae3d52c19e8'; // SHA-256 of password
+
+// To generate a new hash, run in browser console:
+// crypto.subtle.digest('SHA-256', new TextEncoder().encode('YOUR_PASSWORD')).then(h => console.log(Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('')))
+
+async function hashPass(pass) {
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pass));
+    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+}
+
+async function checkAuth() {
+    var pass = document.getElementById('authPass').value;
+    var hash = await hashPass(pass);
+    if (hash === ADMIN_HASH) {
+        document.getElementById('authGate').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        sessionStorage.setItem('kyw_admin', 'ok');
+    } else {
+        document.getElementById('authError').style.display = 'block';
+        document.getElementById('authPass').value = '';
+    }
+}
+
+// Auto-login if already authed this session
+if (sessionStorage.getItem('kyw_admin') === 'ok') {
+    document.getElementById('authGate').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+}
+</script>
+
 </body>
 </html>
