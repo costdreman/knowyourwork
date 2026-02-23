@@ -1106,12 +1106,14 @@ async function saveBlogPost() {
             summary: document.getElementById('blogSummary').value.trim(),
             content: content,
             tag: document.getElementById('blogTag').value,
-            emoji: document.getElementById('blogEmoji').value.trim() || '📄',
+            emoji: document.getElementById('blogEmoji').value.trim(),
             published: document.getElementById('blogPublished').classList.contains('on'),
-            image_position: document.getElementById('blogImagePos').value,
-            meta_title: document.getElementById('blogMetaTitle').value.trim() || null,
-            meta_description: document.getElementById('blogMetaDesc').value.trim() || null
+            image_position: document.getElementById('blogImagePos').value
         };
+        var metaTitle = document.getElementById('blogMetaTitle').value.trim();
+        var metaDesc = document.getElementById('blogMetaDesc').value.trim();
+        if (metaTitle) postData.meta_title = metaTitle;
+        if (metaDesc) postData.meta_description = metaDesc;
         if (imageUrl) postData.image_url = imageUrl;
 
         if (editId) {
@@ -1264,8 +1266,19 @@ async function editBlogPost(id) {
     if (p.image_url) {
         var area = document.getElementById('blogUploadArea');
         area.classList.add('has-file');
-        area.innerHTML = '<img src="' + p.image_url + '" class="upload-preview"><div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.35rem;">Τρέχουσα εικόνα (κλικ για αλλαγή)</div>';
-        area.onclick = function() { document.getElementById('blogImage').click(); };
+        area.innerHTML = '';
+        var fi = document.createElement('input');
+        fi.type = 'file'; fi.id = 'blogImage'; fi.accept = 'image/*'; fi.style.display = 'none';
+        fi.onchange = function() { previewImage(fi, 'blogUploadArea'); };
+        area.appendChild(fi);
+        var img = document.createElement('img');
+        img.src = p.image_url; img.className = 'upload-preview';
+        area.appendChild(img);
+        var txt = document.createElement('div');
+        txt.style.cssText = 'font-size:0.78rem;color:var(--text-muted);margin-top:0.35rem;';
+        txt.textContent = 'Τρέχουσα εικόνα (κλικ για αλλαγή)';
+        area.appendChild(txt);
+        area.onclick = function() { fi.click(); };
     }
 
     document.getElementById('blogFormTitle').textContent = '✏️ Επεξεργασία: ' + p.title;
