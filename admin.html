@@ -562,8 +562,8 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Εικόνα Άρθρου</label>
-                        <div class="upload-area" id="blogUploadArea" onclick="document.getElementById('blogImage').click()">
-                            <input type="file" id="blogImage" accept="image/*" style="display:none;" onchange="previewImage(this,'blogUploadArea')">
+                        <div class="upload-area" id="blogUploadArea">
+                            <input type="file" id="blogImage" accept="image/*" style="display:none;">
                             <div id="blogImageText">📷 Σύρε ή κλίκαρε για εικόνα</div>
                         </div>
                     </div>
@@ -1094,9 +1094,15 @@ async function saveBlogPost() {
     try {
         // Upload image if selected
         var imageUrl = null;
-        var fileInput = document.getElementById('blogImage');
-        if (fileInput && fileInput.files && fileInput.files[0]) {
-            imageUrl = await sbUploadImage(fileInput.files[0]);
+        if (currentFileInput && currentFileInput.files && currentFileInput.files.length > 0) {
+            try {
+                imageUrl = await sbUploadImage(currentFileInput.files[0]);
+            } catch(imgErr) {
+                showStatus(status, 'error', '❌ Σφάλμα εικόνας: ' + imgErr.message);
+                btn.disabled = false;
+                btn.innerHTML = editId ? '💾 Ενημέρωση' : '💾 Δημοσίευση';
+                return;
+            }
         }
 
         var slug = document.getElementById('blogSlug').value.trim() || generateSlug(title);
@@ -1248,7 +1254,7 @@ async function editBlogPost(id) {
     document.getElementById('blogEditId').value = p.id;
     document.getElementById('blogTitle').value = p.title || '';
     document.getElementById('blogTag').value = p.tag || 'Γενικά';
-    document.getElementById('blogEmoji').value = p.emoji || '📄';
+    document.getElementById('blogEmoji').value = p.emoji || '';
     document.getElementById('blogSummary').value = p.summary || '';
     document.getElementById('blogSlug').value = p.slug || '';
     document.getElementById('blogMetaTitle').value = p.meta_title || '';
@@ -1271,6 +1277,7 @@ async function editBlogPost(id) {
         var fi = document.createElement('input');
         fi.type = 'file'; fi.id = 'blogImage'; fi.accept = 'image/*'; fi.style.display = 'none';
         fi.onchange = function() { previewImage(fi, 'blogUploadArea'); };
+        currentFileInput = fi;
         area.appendChild(fi);
         var img = document.createElement('img');
         img.src = p.image_url; img.className = 'upload-preview';
@@ -1280,6 +1287,8 @@ async function editBlogPost(id) {
         txt.textContent = 'Τρέχουσα εικόνα (κλικ για αλλαγή)';
         area.appendChild(txt);
         area.onclick = function() { fi.click(); };
+    } else {
+        resetUploadArea();
     }
 
     document.getElementById('blogFormTitle').textContent = '✏️ Επεξεργασία: ' + p.title;
@@ -1357,18 +1366,7 @@ function resetBlogForm() {
     document.getElementById('blogStatus').style.display = 'none';
 
     // Reset upload area
-    var area = document.getElementById('blogUploadArea');
-    area.classList.remove('has-file');
-    area.innerHTML = '';
-    var fi = document.createElement('input');
-    fi.type = 'file'; fi.id = 'blogImage'; fi.accept = 'image/*'; fi.style.display = 'none';
-    fi.onchange = function() { previewImage(fi, 'blogUploadArea'); };
-    area.appendChild(fi);
-    var txt = document.createElement('div');
-    txt.id = 'blogImageText';
-    txt.textContent = '📷 Σύρε ή κλίκαρε για εικόνα';
-    area.appendChild(txt);
-    area.onclick = function() { fi.click(); };
+    resetUploadArea();
 
     // Reset source view
     document.getElementById('blogEditor').style.display = 'block';
@@ -1410,6 +1408,33 @@ function showStatus(el, type, msg) {
         setTimeout(function() { el.style.display = 'none'; }, 3000);
     }
 }
+
+// Init upload area
+var currentFileInput = null;
+
+function initUploadArea() {
+    var area = document.getElementById('blogUploadArea');
+    currentFileInput = document.getElementById('blogImage');
+    area.onclick = function() { currentFileInput.click(); };
+    currentFileInput.onchange = function() { previewImage(currentFileInput, 'blogUploadArea'); };
+}
+
+function resetUploadArea() {
+    var area = document.getElementById('blogUploadArea');
+    area.classList.remove('has-file');
+    area.innerHTML = '';
+    var fi = document.createElement('input');
+    fi.type = 'file'; fi.id = 'blogImage'; fi.accept = 'image/*'; fi.style.display = 'none';
+    fi.onchange = function() { previewImage(fi, 'blogUploadArea'); };
+    currentFileInput = fi;
+    area.appendChild(fi);
+    var txt = document.createElement('div');
+    txt.textContent = '📷 Σύρε ή κλίκαρε για εικόνα';
+    area.appendChild(txt);
+    area.onclick = function() { fi.click(); };
+}
+
+initUploadArea();
 
 // Listen for input changes to update SQL preview
 document.getElementById('qaQuestion').addEventListener('input', updateSqlPreview);
