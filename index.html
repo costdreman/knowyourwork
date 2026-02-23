@@ -3197,8 +3197,20 @@ document.addEventListener('keydown',function(e){
     else if(e.key===' '||e.key==='Enter'){rpgInteract();e.preventDefault();}
 });
 var _tsx=0,_tsy=0;
-document.addEventListener('touchstart',function(e){_tsx=e.touches[0].clientX;_tsy=e.touches[0].clientY;});
-document.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-_tsx,dy=e.changedTouches[0].clientY-_tsy;if(Math.abs(dx)<20&&Math.abs(dy)<20){rpgInteract();return;}if(Math.abs(dx)>Math.abs(dy)){dx>0?rpgMove(1,0):rpgMove(-1,0);}else{dy>0?rpgMove(0,1):rpgMove(0,-1);}});
+document.addEventListener('touchstart',function(e){
+    _tsx=e.touches[0].clientX;_tsy=e.touches[0].clientY;
+});
+document.addEventListener('touchend',function(e){
+    // Don't handle touch on buttons, dialogue, or other interactive elements
+    var t=e.target;
+    if(t.tagName==='BUTTON'||t.closest('.rpg-dialogue-overlay')||t.closest('.rpg-dlg-btn')||t.closest('#rpgDialogue')) return;
+    // Don't handle if game page is not active or not in game
+    if(!document.getElementById('gameArea')||document.getElementById('gameArea').style.display==='none') return;
+    var dx=e.changedTouches[0].clientX-_tsx,dy=e.changedTouches[0].clientY-_tsy;
+    if(Math.abs(dx)<20&&Math.abs(dy)<20){rpgInteract();return;}
+    if(Math.abs(dx)>Math.abs(dy)){dx>0?rpgMove(1,0):rpgMove(-1,0);}
+    else{dy>0?rpgMove(0,1):rpgMove(0,-1);}
+});
 </script>
 </body>
 </html>
