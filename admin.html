@@ -1094,7 +1094,7 @@ async function saveBlogPost() {
         // Upload image if selected
         var imageUrl = null;
         var fileInput = document.getElementById('blogImage');
-        if (fileInput.files && fileInput.files[0]) {
+        if (fileInput && fileInput.files && fileInput.files[0]) {
             imageUrl = await sbUploadImage(fileInput.files[0]);
         }
 
@@ -1345,8 +1345,16 @@ function resetBlogForm() {
     // Reset upload area
     var area = document.getElementById('blogUploadArea');
     area.classList.remove('has-file');
-    area.innerHTML = '<input type="file" id="blogImage" accept="image/*" style="display:none;" onchange="previewImage(this,\'blogUploadArea\')"><div id="blogImageText">📷 Σύρε ή κλίκαρε για εικόνα</div>';
-    area.onclick = function() { document.getElementById('blogImage').click(); };
+    area.innerHTML = '';
+    var fi = document.createElement('input');
+    fi.type = 'file'; fi.id = 'blogImage'; fi.accept = 'image/*'; fi.style.display = 'none';
+    fi.onchange = function() { previewImage(fi, 'blogUploadArea'); };
+    area.appendChild(fi);
+    var txt = document.createElement('div');
+    txt.id = 'blogImageText';
+    txt.textContent = '📷 Σύρε ή κλίκαρε για εικόνα';
+    area.appendChild(txt);
+    area.onclick = function() { fi.click(); };
 
     // Reset source view
     document.getElementById('blogEditor').style.display = 'block';
