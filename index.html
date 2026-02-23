@@ -3187,6 +3187,8 @@ function drawRPG(){
 }
 // Keyboard
 document.addEventListener('keydown',function(e){
+    var tag = e.target.tagName;
+    if(tag==='INPUT'||tag==='TEXTAREA'||e.target.contentEditable==='true') return;
     if(e.key==='ArrowUp'){rpgMove(0,-1);e.preventDefault();}
     else if(e.key==='ArrowDown'){rpgMove(0,1);e.preventDefault();}
     else if(e.key==='ArrowLeft'){rpgMove(-1,0);e.preventDefault();}
