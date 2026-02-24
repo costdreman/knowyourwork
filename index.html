@@ -595,7 +595,6 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
                     <button onclick="askQuestion('Τι ισχύει αν αρρωστήσω;')">Αναρρωτική</button>
                     <button onclick="askQuestion('Τι ισχύει για επίσκεψη σε γυναικολόγο;')">Προγεννητική</button>
                     <button onclick="askQuestion('Τι ισχύει για την άδεια άνευ αποδοχών;')">Άνευ Αποδοχών</button>
-                    <button onclick="askQuestion('Τι ισχύει για την άδεια φροντίδας τέκνου;')">Φροντίδα Τέκνου</button>
                 </div>
             </div>
             <div class="chat-dropdown-wrap">
@@ -986,7 +985,7 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
             </div>
             <div class="footer-col">
                 <div class="footer-col-title">Επικοινωνία</div>
-                <a href="/cdn-cgi/l/email-protection#d6bdb8b9a1afb9a3a4a1b9a4bdb1a496b1bbb7bfbaf8b5b9bb"><span class="__cf_email__" data-cfemail="d6bdb8b9a1afb9a3a4a1b9a4bdb1a496b1bbb7bfbaf8b5b9bb">[email&#160;protected]</span></a>
+                <a href="mailto:knowyourworkgr@gmail.com">knowyourworkgr@gmail.com</a>
                 <a href="https://www.instagram.com/knowyourwork.gr/" target="_blank">Instagram</a>
             </div>
         </div>
@@ -999,7 +998,7 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
         </div>
     </div>
 </footer>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 /* ============================================
    KnowYourWork — Τα Δίνουμε Όλα
@@ -1068,27 +1067,6 @@ function showPage(id) {
 
 // ========== HASH ROUTING (shareable links) ==========
 window.addEventListener('DOMContentLoaded', function() {
-    // Check for ?post=slug (from Cloudflare Worker redirect)
-    var params = new URLSearchParams(window.location.search);
-    var postSlug = params.get('post');
-    if (postSlug) {
-        // Clean URL (remove ?post= from address bar)
-        window.history.replaceState({}, '', window.location.pathname + '#blog');
-        // Wait for blog posts to load, then open the post
-        var attempts = 0;
-        var checkBlog = setInterval(function() {
-            attempts++;
-            if (blogPosts.length > 0) {
-                clearInterval(checkBlog);
-                showPage('blog');
-                setTimeout(function() { showBlogPost(postSlug); }, 150);
-            } else if (attempts > 40) { // 4 seconds timeout
-                clearInterval(checkBlog);
-                showPage('blog');
-            }
-        }, 100);
-        return;
-    }
     var hash = window.location.hash.replace('#', '');
     if (hash && document.getElementById(hash)) {
         showPage(hash);
@@ -3231,4 +3209,11 @@ document.addEventListener('touchend',function(e){
     if(t.tagName==='BUTTON'||t.closest('.rpg-dialogue-overlay')||t.closest('.rpg-dlg-btn')||t.closest('#rpgDialogue')) return;
     // Don't handle if game page is not active or not in game
     if(!document.getElementById('gameArea')||document.getElementById('gameArea').style.display==='none') return;
-    var dx=e.changedTouches[0].cl
+    var dx=e.changedTouches[0].clientX-_tsx,dy=e.changedTouches[0].clientY-_tsy;
+    if(Math.abs(dx)<20&&Math.abs(dy)<20){rpgInteract();return;}
+    if(Math.abs(dx)>Math.abs(dy)){dx>0?rpgMove(1,0):rpgMove(-1,0);}
+    else{dy>0?rpgMove(0,1):rpgMove(0,-1);}
+});
+</script>
+</body>
+</html>
