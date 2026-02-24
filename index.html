@@ -1085,6 +1085,24 @@ window.addEventListener('DOMContentLoaded', function() {
         }, 100);
         return;
     }
+    // Check for #blog/slug (shareable blog links)
+    var blogMatch = window.location.hash.match(/^#blog\/(.+)$/);
+    if (blogMatch) {
+        var slug = blogMatch[1];
+        var attempts2 = 0;
+        var checkBlog2 = setInterval(function() {
+            attempts2++;
+            if (blogPosts.length > 0) {
+                clearInterval(checkBlog2);
+                showPage('blog');
+                setTimeout(function() { showBlogPost(slug); }, 150);
+            } else if (attempts2 > 40) {
+                clearInterval(checkBlog2);
+                showPage('blog');
+            }
+        }, 100);
+        return;
+    }
     var hash = window.location.hash.replace('#', '');
     if (hash && document.getElementById(hash)) {
         showPage(hash);
@@ -2417,12 +2435,10 @@ function showBlogPost(id) {
     article.style.display = 'block';
     article.innerHTML = 
         '<div class="blog-article-back" onclick="closeBlogPost()">← Πίσω στα άρθρα</div>' +
-        (post.image_url ? '<img src="' + post.image_url + '" class="blog-hero-img" style="width:100%;max-height:400px;object-fit:cover;border-radius:12px;margin-bottom:1.5rem;object-position:' + (post.image_position || 'center') + ';" alt="' + post.title + '">' : '') +
-        '<h1>' + post.title + '</h1>' +
-        '<div class="meta">' + post.date + ' · ' + post.tag + '</div>' +
-        '<div class="blog-article-content">' + post.content + '</div>';
+        // ... rest of innerHTML ...
     
     window.scrollTo(0, 80);
+    history.replaceState(null, '', '#blog/' + id);
 }
 
 function closeBlogPost() {
