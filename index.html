@@ -1067,6 +1067,24 @@ function showPage(id) {
 
 // ========== HASH ROUTING (shareable links) ==========
 window.addEventListener('DOMContentLoaded', function() {
+    var params = new URLSearchParams(window.location.search);
+    var postSlug = params.get('post');
+    if (postSlug) {
+        window.history.replaceState({}, '', window.location.pathname + '#blog');
+        var attempts = 0;
+        var checkBlog = setInterval(function() {
+            attempts++;
+            if (blogPosts.length > 0) {
+                clearInterval(checkBlog);
+                showPage('blog');
+                setTimeout(function() { showBlogPost(postSlug); }, 150);
+            } else if (attempts > 40) {
+                clearInterval(checkBlog);
+                showPage('blog');
+            }
+        }, 100);
+        return;
+    }
     var hash = window.location.hash.replace('#', '');
     if (hash && document.getElementById(hash)) {
         showPage(hash);
