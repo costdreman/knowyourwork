@@ -2442,7 +2442,10 @@ function showBlogPost(id) {
     article.style.display = 'block';
     article.innerHTML = 
         '<div class="blog-article-back" onclick="closeBlogPost()">← Πίσω στα άρθρα</div>' +
-        // ... rest of innerHTML ...
+        (post.image_url ? '<img src="' + post.image_url + '" class="blog-hero-img" style="width:100%;max-height:400px;object-fit:cover;border-radius:12px;margin-bottom:1.5rem;object-position:' + (post.image_position || 'center') + ';" alt="' + post.title + '">' : '') +
+        '<h1>' + post.title + '</h1>' +
+        '<div class="meta">' + post.date + ' · ' + post.tag + '</div>' +
+        '<div class="blog-article-content">' + post.content + '</div>';
     
     window.scrollTo(0, 80);
     history.replaceState(null, '', '#blog/' + id);
