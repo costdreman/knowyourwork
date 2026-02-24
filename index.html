@@ -1109,6 +1109,13 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 });
 window.addEventListener('hashchange', function() {
+    var blogMatch = window.location.hash.match(/^#blog\/(.+)$/);
+    if (blogMatch) {
+        var slug = blogMatch[1];
+        showPage('blog');
+        setTimeout(function() { showBlogPost(slug); }, 150);
+        return;
+    }
     var hash = window.location.hash.replace('#', '');
     if (hash && document.getElementById(hash)) {
         showPage(hash);
