@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-99KH84L3TC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-99KH84L3TC');
-</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-99KH84L3TC');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Μάθε τα εργασιακά σου δικαιώματα. Υπολογιστές μισθού, αδειών, αποζημίωσης, υπερωριών. Οδηγοί & εργαλεία βασισμένα στην ελληνική νομοθεσία.">
@@ -1001,7 +1002,7 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
             </div>
             <div class="footer-col">
                 <div class="footer-col-title">Επικοινωνία</div>
-                <a href="/cdn-cgi/l/email-protection#caa1a4a5bdb3a5bfb8bda5b8a1adb88aada7aba3a6e4a9a5a7"><span class="__cf_email__" data-cfemail="771c1918000e1802050018051c100537101a161e1b5914181a">[email&#160;protected]</span></a>
+                <a href="/cdn-cgi/l/email-protection#94fffafbe3edfbe1e6e3fbe6fff3e6d4f3f9f5fdf8baf7fbf9"><span class="__cf_email__" data-cfemail="f59e9b9a828c9a8087829a879e9287b59298949c99db969a98">[email&#160;protected]</span></a>
                 <a href="https://www.instagram.com/knowyourwork.gr/" target="_blank">Instagram</a>
             </div>
         </div>
@@ -2280,6 +2281,7 @@ async function loadBlogPosts() {
             };
         });
         renderBlog();
+        renderHomeArticles();
     } catch(e) {
         console.log('Blog load error:', e);
         renderBlogFallback();
@@ -3270,10 +3272,7 @@ document.addEventListener('keydown',function(e){
     var tag = e.target.tagName;
     if(tag==='INPUT'||tag==='TEXTAREA'||e.target.contentEditable==='true') return;
     if(e.key==='ArrowUp'){rpgMove(0,-1);e.preventDefault();}
-    else if(e.key==='ArrowDown'){rpgMove(0,1);e.preventDefault();}
-    else if(e.key==='ArrowLeft'){rpgMove(-1,0);e.preventDefault();}
-    else if(e.key==='ArrowRight'){rpgMove(1,0);e.preventDefault();}
-    else if(e.key===' '||e.key==='Enter'){rpgInteract();e.preventDefault();}
+    else if(e.key==ult();}
 });
 var _tsx=0,_tsy=0;
 document.addEventListener('touchstart',function(e){
@@ -3285,4 +3284,11 @@ document.addEventListener('touchend',function(e){
     if(t.tagName==='BUTTON'||t.closest('.rpg-dialogue-overlay')||t.closest('.rpg-dlg-btn')||t.closest('#rpgDialogue')) return;
     // Don't handle if game page is not active or not in game
     if(!document.getElementById('gameArea')||document.getElementById('gameArea').style.display==='none') return;
-    var dx=e.changedTouches[0].cl
+    var dx=e.changedTouches[0].clientX-_tsx,dy=e.changedTouches[0].clientY-_tsy;
+    if(Math.abs(dx)<20&&Math.abs(dy)<20){rpgInteract();return;}
+    if(Math.abs(dx)>Math.abs(dy)){dx>0?rpgMove(1,0):rpgMove(-1,0);}
+    else{dy>0?rpgMove(0,1):rpgMove(0,-1);}
+});
+</script>
+</body>
+</html>
