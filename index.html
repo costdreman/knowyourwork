@@ -2427,11 +2427,13 @@ function renderHomeArticles() {
     if (!container || blogPosts.length === 0) return;
     var posts = blogPosts.slice(0, 3);
     container.innerHTML = posts.map(function(p) {
-        return '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor=\'var(--cyan)\'" onmouseout="this.style.borderColor=\'var(--border)\'" onclick="showPage(\'blog\');setTimeout(function(){showBlogPost(\'' + p.id + '\')},150)">' +
-            '<div style="font-size:1.5rem;margin-bottom:0.5rem;">' + (p.emoji || '📄') + '</div>' +
-            '<div style="font-size:0.85rem;line-height:1.3;margin-bottom:0.3rem;">' + p.title + '</div>' +
+        var imgHtml = p.image_url ? '<img src="' + p.image_url + '" style="width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:0.75rem;" alt="' + p.title + '">' : '<div style="font-size:2rem;margin-bottom:0.5rem;">' + (p.emoji || '📄') + '</div>';
+        return '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor=\'var(--cyan)\'" onmouseout="this.style.borderColor=\'var(--border)\'" onclick="showPage(\'blog\');setTimeout(function(){showBlogPost(\'' + p.id + '\')},150)">' +
+            imgHtml +
+            '<div style="padding:0 1rem 1rem;">' +
+            '<div style="font-size:0.85rem;font-weight:600;line-height:1.3;margin-bottom:0.3rem;">' + p.title + '</div>' +
             '<div style="color:var(--text-muted);font-size:0.7rem;">' + p.date + '</div>' +
-        '</div>';
+            '</div></div>';
     }).join('');
     wrapper.style.display = 'block';
 }
