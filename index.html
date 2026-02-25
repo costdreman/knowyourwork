@@ -2280,6 +2280,7 @@ async function loadBlogPosts() {
             };
         });
         renderBlog();
+        renderHomeArticles();
     } catch(e) {
         console.log('Blog load error:', e);
         renderBlogFallback();
