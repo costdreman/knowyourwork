@@ -2945,7 +2945,7 @@ var levels=[
  ],items:[{x:11,y:3,emoji:'⏰',name:'Ωράριο',collected:false},{x:1,y:13,emoji:'🚰',name:'Νερό',collected:false}],goal:'Αντιμετώπισε την υπερωρία!',objectives:['Μίλα στη Μαρίνα','Μίλα στον Λάκη','Μίλα στον Μπούφο'],playerStart:{x:5,y:7}},
 {name:'Η Άδεια',
  npcs:[
-  {x:3,y:11,emoji:'👩‍💼',name:'Μαρίνα',color:'#00cc66',lines:['Η ετήσια άδεια ξεκινά από τη μέρα 1!','Ο εργοδότης ΠΡΕΠΕΙ να στη δώσει.','Αν αρνηθεί μέχρι 31/3: αποδοχές +100%!'],talked:false},
+  {x:3,y:11,emoji:'👩‍💼',name:'Μαρίνα',color:'#00cc66',lines:['Η ετήσια άδεια ξεκινά από τη μέρα 1!','Ο εργοδότης ΠΡΕΠΕΙ να στη δώσει.','Αν αρνηθεί μέχρι 31/3 του επόμενου έτους: αποδοχές +100%!'],talked:false},
   {x:10,y:20,emoji:'🐍',name:'Λάκης',color:'#ff6b35',lines:['Εγώ δεν πήρα φέτος άδεια.','Δεν με πειράζει!','(χάνει λεφτά)'],talked:false},
   {x:16,y:11,emoji:'😤',name:'Μπούφος',color:'#ff4444',
    question:{text:'Άδεια; ΤΩΡΑ; Πολλή δουλειά! Θα δούμε Δεκέμβρη.',choices:[
@@ -3066,10 +3066,11 @@ function rpgMove(dx,dy){
                 window._npcLines=waterLines;window._npcLineIdx=0;
                 window._npcRef={talked:false};
                 updateChoices('<button onclick="rpgNextLine()" class="rpg-dlg-btn">Συνέχεια →</button>');
+            } else if(items[i].name==='Άδεια'){
+                rpgTalking=true;
+                showDialogue('🏖️','','Μάζεψες: Άδεια! Μην ξεχάσεις το επίδομα άδειας. Το παίρνεις πριν φύγεις άδεια!','var(--cyan)');
+                updateChoices('<button onclick="rpgCloseDialogue()" class="rpg-dlg-btn">Οκ</button>');
             } else {
-                showDialogue('🎒','',items[i].emoji+' Μάζεψες: '+items[i].name+'!','var(--cyan)');
-                setTimeout(function(){if(!rpgTalking){document.getElementById('rpgDialogue').style.display='none';document.getElementById('rpgDialogueMobile').classList.remove('active');}},1500);
-            }
         }
     }
     document.getElementById('rpgRoomLabel').textContent=getRoom(player.x,player.y);
