@@ -1448,7 +1448,7 @@ document.getElementById('qaEditor').addEventListener('input', updateSqlPreview);
 
 <script>
 // Password gate (fallback security — primary is Cloudflare Access)
-var ADMIN_HASH = '7f1d7029462cecf34581c7cf53bc83246a04fadb6b33804777c58ae3d52c19e8'; // SHA-256 of password
+var ADMIN_HASH = '8c8f7ef146daa40b22637a77b0182d066f2fa2cd0af4e90fc70e77b3b8830375'; // SHA-256 of password
 
 // To generate a new hash, run in browser console:
 // crypto.subtle.digest('SHA-256', new TextEncoder().encode('YOUR_PASSWORD')).then(h => console.log(Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('')))
