@@ -2872,7 +2872,7 @@ function showStoryEnd(){storyFinished=true;var chat=document.getElementById('sto
 function backToStories(){document.getElementById('storyList').style.display='flex';document.getElementById('storyActive').style.display='none';}
 
 // ========== OFFICE QUEST RPG ==========
-var T=20,COLS=24,ROWS=24,rpgXP=0,rpgLvl=0,rpgFacts=[],rpgTalking=false;
+var T=20,COLS=24,ROWS=24,rpgXP=0,rpgLvl=0,rpgFacts=[],rpgTalking=false,bossDoorLocked=true;
 var player={x:12,y:18,dir:0};
 var npcs=[],items=[];
 var canvas,ctx;
@@ -2895,7 +2895,7 @@ var officeMap=[
 [1,0,8,8,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1],
 [1,0,0,0,0,0,1,0,5,1,0,0,0,0,1,0,0,2,0,1,0,0,0,1],
 [1,0,0,0,4,0,1,1,3,1,0,0,0,0,1,0,0,0,0,1,1,3,1,1],
-[1,1,3,3,3,1,1,3,1,1,0,0,0,0,1,1,1,3,1,1,1,1,1,1],
+[1,1,3,3,3,1,1,3,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1],
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,3,3,1,1,1,1,1,1,1,1,1,1,1],
@@ -3024,6 +3024,8 @@ function advanceGoal(){
 }
 function loadLevel(idx){
     rpgLvl=idx;var lv=levels[idx];
+    bossDoorLocked=true;
+    officeMap[14][17]=WALL;
     player.x=lv.playerStart.x;player.y=lv.playerStart.y;player.dir=3;
     npcs=JSON.parse(JSON.stringify(lv.npcs));
     items=JSON.parse(JSON.stringify(lv.items));
@@ -3105,7 +3107,7 @@ function talkTo(npc){
 }
 function rpgNextLine(){
     window._npcLineIdx++;
-    if(window._npcLineIdx>=window._npcLines.length){window._npcRef.talked=true;checkRevealItems();rpgCloseDialogue();return;}
+    if(window._npcLineIdx>=window._npcLines.length){window._npcRef.talked=true;checkRevealItems();checkBossDoor();rpgCloseDialogue();return;}
     var txt=window._npcLines[window._npcLineIdx];
     document.getElementById('rpgText').textContent=txt;
     var mobTxt=document.getElementById('rpgTextMob');
@@ -3127,6 +3129,18 @@ function rpgAnswer(lvl,npcName,choiceIdx){
         updateChoices('<button onclick="rpgAfterAnswer()" class="rpg-dlg-btn">'+(rpgLvl<levels.length-1?'Επόμενο Level →':'Δες αποτελέσματα!')+'</button>');
     }
 }
+function checkBossDoor(){
+    if(!bossDoorLocked)return;
+    var marina=npcs.find(function(n){return n.name==='Μαρίνα';});
+    var lakis=npcs.find(function(n){return n.name==='Λάκης';});
+    if(marina&&marina.talked&&lakis&&lakis.talked){
+        bossDoorLocked=false;
+        officeMap[14][17]=DOOR;
+        showDialogue('🔓','','Η πόρτα του Μπούφου ξεκλείδωσε! 🚪','var(--cyan)');
+        setTimeout(function(){if(!rpgTalking){document.getElementById('rpgDialogue').style.display='none';document.getElementById('rpgDialogueMobile').classList.remove('active');}},2500);
+        drawRPG();
+    }
+}
 function checkRevealItems(){
     var allTalked=npcs.every(function(n){return n.talked;});
     if(allTalked){
@@ -3145,7 +3159,7 @@ function showContract(){
     var contractHTML='<div style="font-family:\'Press Start 2P\',monospace;background:#1a2332;color:#e8e0c8;border:3px solid #c8b88a;border-radius:2px;padding:0.75rem;font-size:0.6rem;line-height:2.2;max-height:60vh;overflow-y:auto;text-align:left;">'+
         '<div style="text-align:center;font-weight:bold;font-size:0.7rem;border-bottom:2px solid #c8b88a;padding-bottom:0.4rem;margin-bottom:0.5rem;">'+
         '📜 ΣΥΜΒΑΣΗ ΕΡΓΑΣΙΑΣ<br>ΑΟΡΙΣΤΟΥ ΧΡΟΝΟΥ</div>'+
-        'Στην Αθήνα σήμερα ________<br><br>'+
+        'Στην Θεσσαλονίκη σήμερα ________<br><br>'+
         '<b>ΕΡΓΟΔΟΤΗΣ:</b> ____________<br>'+
         '<b>ΑΦΜ:</b> ______ ΔΟΥ: ______<br><br>'+
         '<b>ΕΡΓΑΖΟΜΕΝΟΣ:</b> ____________<br>'+
@@ -3200,7 +3214,7 @@ function updateChoices(html){
     var mob=document.getElementById('rpgChoicesMob');
     if(mob) mob.innerHTML=html;
 }
-function rpgCloseDialogue(){rpgTalking=false;document.getElementById('rpgDialogue').style.display='none';var mob=document.getElementById('rpgDialogueMobile');mob.classList.remove('active','fullscreen');drawRPG();}
+function rpgCloseDialogue(){rpgTalking=false;document.getElementById('rpgDialogue').style.display='none';var mob=document.getElementById('rpgDialogueMobile');mob.classList.remove('active','fullscreen');updateGoalText();drawRPG();}
 function showRPGEnd(){
     stopMusic();
     document.getElementById('gameArea').style.display='none';
@@ -3273,7 +3287,7 @@ document.addEventListener('keydown',function(e){
     else if(e.key==='ArrowDown'){rpgMove(0,1);e.preventDefault();}
     else if(e.key==='ArrowLeft'){rpgMove(-1,0);e.preventDefault();}
     else if(e.key==='ArrowRight'){rpgMove(1,0);e.preventDefault();}
-    else if(e.key===' '||e.key==='Enter'){e.preventDefault();var db=document.querySelector('.rpg-dlg-btn');if(db)db.click();}
+    else if(e.key===' '||e.key==='Enter'){rpgInteract();e.preventDefault();}
 });
 var _tsx=0,_tsy=0;
 document.addEventListener('touchstart',function(e){
