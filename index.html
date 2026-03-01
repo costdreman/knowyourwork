@@ -3071,6 +3071,9 @@ function rpgMove(dx,dy){
                 showDialogue('🏖️','','Μάζεψες: Άδεια! Μην ξεχάσεις το επίδομα άδειας. Το παίρνεις πριν φύγεις άδεια!','var(--cyan)');
                 updateChoices('<button onclick="rpgCloseDialogue()" class="rpg-dlg-btn">Οκ</button>');
             } else {
+                showDialogue('🎒','',items[i].emoji+' Μάζεψες: '+items[i].name+'!','var(--cyan)');
+                setTimeout(function(){if(!rpgTalking){document.getElementById('rpgDialogue').style.display='none';document.getElementById('rpgDialogueMobile').classList.remove('active');}},1500);
+            }
         }
     }
     document.getElementById('rpgRoomLabel').textContent=getRoom(player.x,player.y);
